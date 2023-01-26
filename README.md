@@ -30,15 +30,15 @@ Then finally, open the client by going to `client/index.html`, opening it in a b
 
 ___
 
-### The Actors
+## The Actors
 
-#### Proxy
+### Proxy
 The proxy handles http requests as well as a websocket endpoint. THe websocket server is what servers will connect to indicating they are online and willing to provide resources. With the websocket we get a persistent socket (connect/disconnect events) so we can add/remove hosts who come and go during the proxy's lifetime. We can also load any number of http/rest endpoints within the proxy to provide any more functionality.
 
 In this example the proxy is listening on port 3000. In production we would host the proxy remotely with a known domain so it is always accessible. We will also be able to host whatever web client we want publicly facing here as well.
 
-#### Server
+### Server
 This is a peer or host who stores and serves ad images to the proxy. It uses a websocket client (socket.io-client) to connect to the proxy when it is run and waits for the event 'get-ad' that when asked can stream a random (or not) ad image back to the proxy who sends it to a client.
 
-#### Client
+### Client
 This would be any website using our service. For now it is just a single html page with an iframe pointing to the proxy at the '/ad' endpoint which returns an image in full.
