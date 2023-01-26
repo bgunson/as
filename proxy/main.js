@@ -5,6 +5,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+const os = require('os');
 
 // cache of currently active (connected) servers
 const servers = {};
@@ -31,8 +32,8 @@ app.get('/ad', (req, res) => {
     // wait for the stream
     socket.once("upload-ad", (id, stream) => {
         // cache the file on the fs on proxy machine
-        const file = `/tmp/adshare-${id}`; 
-        writeFile(file, stream, (err) => {
+        const file = `${os.tmpdir()}/adshare-${id}`; 
+        writeFile(file, stream, {}, (err) => {
             if (!err) {
                 res.sendFile(file);
             } else {
