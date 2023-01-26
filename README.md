@@ -17,13 +17,13 @@ Next in the following order in separate terminals (processes):
 Run the proxy:
 ```
 cd proxy
-node proxy/main.js
+node main.js
 ```
 
 Run a server (you can run any number of these in multiple terminals to simulate a distrubuted system):
 ```
 cd server
-node server/main.js
+node main.js
 ```
 
 Then finally, open the client by going to `client/index.html`, opening it in a browser. There you will see an iframed ad which was given by the to the client from the server via the proxy.
