@@ -30,7 +30,7 @@ app.get('/ad', (req, res) => {
     
     socket.emit("get-ad");  // tell them we want an ad
     // wait for the stream
-    socket.once("upload-ad", (id, stream) => {
+    socket.once("give-ad", (id, stream) => {
         // cache the file on the fs on proxy machine
         const file = `${os.tmpdir()}/adshare-${id}`; 
         writeFile(file, stream, {}, (err) => {
