@@ -80,8 +80,8 @@
                 <mxCell id="30" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;flipH=1;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;rotation=-90;" vertex="1" parent="1">
                     <mxGeometry x="454.07000000000005" y="-90.00000000000001" width="51.25" height="309.37" as="geometry"/>
                 </mxCell>
-                <mxCell id="34" value="WebSocket connection" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-                    <mxGeometry x="405" y="16.549999999999997" width="150" height="30" as="geometry"/>
+                <mxCell id="34" value="WebSocket or WebRTC connection" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="375" y="16.549999999999997" width="210" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="35" value="HTTP request/response (stateless)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
                     <mxGeometry x="80.31" y="16.549999999999997" width="210" height="30" as="geometry"/>
