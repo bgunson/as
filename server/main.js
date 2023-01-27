@@ -16,7 +16,7 @@ socket.on("get-ad", () => {
 
     fs.readFile(`./${name}`, (err, data) => {
         if (!err) {
-            socket.emit("upload-ad", name, data);
+            socket.emit("give-ad", name, data);
         }
     });
 });
