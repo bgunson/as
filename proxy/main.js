@@ -59,6 +59,11 @@ io.on("connection", (socket) => {
         delete servers[socket.id];
     });
 
+
+    socket.on("replicate", (ad) => {
+        
+    } )
+
 });
 
 
