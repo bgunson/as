@@ -16,17 +16,17 @@ Run the proxy:
 ```
 cd proxy
 npm install
-node main.js
+npm run start
 ```
 
 Run a server (you can run any number of these in multiple terminals to simulate a distrubuted system):
 ```
 cd server
 npm install
-node main.js
+npm run start
 ```
 
-Then finally, open the client by going to `client/index.html`, opening it in a browser. There you will see an iframed ad which was given by the to the client from the server via the proxy.
+Then finally, open the client by going to `client/index.html` or at https://bengunson.me/as-example-client, opening it in your preferred web browser. There you will see an iframed ad which was given by the to the client from the server via the proxy.
 
 ___
 
