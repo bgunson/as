@@ -9,20 +9,20 @@ Here is a small NodeJS proof of conecpt for adshare using the client-server arch
 - Clients: are any website which embeds an adshare in their site.
 
 To run, make sure you have Node and npm installed on your computer and run:
-```
-npm install
-```
+
 Next in the following order in separate terminals (processes):
 
 Run the proxy:
 ```
 cd proxy
+npm install
 node main.js
 ```
 
 Run a server (you can run any number of these in multiple terminals to simulate a distrubuted system):
 ```
 cd server
+npm install
 node main.js
 ```
 
