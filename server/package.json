@@ -1,15 +1,23 @@
 {
   "name": "adshare-server",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "Peer server for serving/uploading ads. Join the swarm!",
   "main": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon main.js",
+    "start": "node main.js"
   },
   "keywords": [],
   "author": "Bennett Gunson",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.5.4",
     "socket.io-client": "^4.5.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "concurrently":"^7.6.0"
   }
 }
