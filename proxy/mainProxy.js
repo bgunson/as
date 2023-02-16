@@ -7,8 +7,8 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const os = require('os');
 
-// cache of currently active (connected) servers
-const servers = {};
+// cache of currently active (connected) servers i.e. peers
+const peers = {};
 
 app.get('/', (req, res) => {
   res.send("Welcome to adshare!\n\nWe are a distributed marketing platform where your ad will get noticed. Blah blah blah...");
@@ -17,10 +17,10 @@ app.get('/', (req, res) => {
 app.get('/ad', (req, res) => {
 
     // choose random server
-    const serverId = Object.keys(servers)[Math.random() * (Object.keys(servers).length-1)];
+    const peerId = Object.keys(servers)[Math.random() * (Object.keys(servers).length-1)];
     
     // get the socket ref of the chosen server
-    const socket = servers[serverId];
+    const socket = peers[peerId];
 
     if (!socket) {
         // no servers online
@@ -62,12 +62,21 @@ io.on("connection", (socket) => {
 
     console.log(`${socket.id} is now part of the Swarm!`);
     // store a reference to this server's socket. (note servers are just socket.io clients)
-    servers[socket.id] = socket;
+    peers[socket.id] = socket;
 
     socket.on("disconnect", () => {
         console.log(`${socket.id} has been exiled from the Swarm (for now!)`)
         // this server disconected, remove from local cache so they wont be picked next time a client hails an ad
-        delete servers[socket.id];
+        delete peers[socket.id];
+        io.emit("give-peer-list", Object.keys(peers));
+    });
+
+        socket.on("replicate", (ad) => {
+        // TODO: choose another peer to be replicated to
+    });
+
+    socket.on("get-peer-list", () => {
+        io.emit("give-peer-list", Object.keys(peers));
     });
 
 });

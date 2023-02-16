@@ -6,8 +6,16 @@ const socket = io(`http://localhost:${process.env.PORT || 3000}`);
 
 socket.on("error", (err) => console.log(err));
 
+socket.on("give-peer-list", (list) => {
+    peers = list;
+    console.log(`I am: ${socket.id}`);
+    console.log(peers);
+    console.log("===")
+});
+
 socket.on("connect", () => {
     console.log("Proxy connection established.");
+    socket.emit("get-peer-list");
 });
 
 //
