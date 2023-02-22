@@ -1,7 +1,7 @@
 const { io } = require("socket.io-client");
 const fs = require("fs");
 
-const socket = io(`http://localhost:${process.env.PORT || 3000}`);
+const socket = io(`https://amazing-limiter-378022.uw.r.appspot.com`);
 
 let peers;
 
