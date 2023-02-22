@@ -20,9 +20,7 @@ socket.on("connect", () => {
 
 //
 socket.on("get-ad", () => {
-    // choose the ad that will be sent to the proxy
-
-    //Select random file
+    //Choose the ad that will be sent to the proxy by selecting a random file
     const path = require('path');
     //Assumes we keep file in ./as/peer/ads
     const dirPath= path.join(__dirname,'ads');
@@ -33,10 +31,10 @@ socket.on("get-ad", () => {
   
     //Transmit local ad as file
     //fs.readFile( filepath, function(error, filedata))
-    fs.readFile(`./${adName}`, (err, data) => {
+    fs.readFile(`./${randomFile}`, (err, data) => {
         if (!err) {
-            console.log("Transmitting ad: " + name + "to proxy...");
-            socket.emit("upload-ad", name, data);
+            console.log("Transmitting ad: " + randomFile + "to proxy...");
+            socket.emit("upload-ad", randomFile, data);
         }
         else{
             //NB: With nodemon running both proxy and server instances, error transmitting puts client page to perma-reloading with no ad rip
