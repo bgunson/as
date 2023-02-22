@@ -16,6 +16,8 @@ app.get('/', (req, res) => {
 
 app.get('/ad', (req, res) => {
 
+    console.log("ad requested");
+
     // choose random server
     const peerId = Object.keys(servers)[Math.random() * (Object.keys(servers).length-1)];
     

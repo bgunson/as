@@ -27,10 +27,10 @@ socket.on("get-ad", () => {
 
     //Transmit local ad as file
     //fs.readFile( filepath, function(error, filedata))
-    fs.readFile(`./${adName}`, (err, data) => {
+    fs.readFile(`./${name}`, (err, data) => {
         if (!err) {
             console.log("Transmitting ad: " + name + "to proxy...");
-            socket.emit("upload-ad", name, data);
+            socket.emit("give-ad", name, data);
         }
         else{
             //NB: With nodemon running both proxy and server instances, error transmitting puts client page to perma-reloading with no ad rip
