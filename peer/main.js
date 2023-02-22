@@ -21,10 +21,16 @@ socket.on("connect", () => {
 //
 socket.on("get-ad", () => {
     // choose the ad that will be sent to the proxy
-    const name = 'some-ad.jpg';     // TODO: implement some sort of picking function or whatever
-    const adName = 'ad1.png'
-    const adName2 = 'some-a.jpg';
 
+    //Select random file
+    const path = require('path');
+    //Assumes we keep file in ./as/peer/ads
+    const dirPath= path.join(__dirname,'ads');
+    //Access files in path
+    const files = fs.readdirSync(dirPath)
+    //Picks a random file up to number of files
+    randomFile = files[Math.floor(Math.random() * files.length)] 
+  
     //Transmit local ad as file
     //fs.readFile( filepath, function(error, filedata))
     fs.readFile(`./${adName}`, (err, data) => {
