@@ -26,11 +26,11 @@ socket.on("get-ad", () => {
     //Access files in path
     const files = fs.readdirSync(dirPath)
     //Picks a random file up to number of files
-    const randomFile = files[Math.floor(Math.random() * files.length)] 
+    const randomFile = files[Math.floor(Math.random() * files.length)];
   
     //Transmit local ad as file
     //fs.readFile( filepath, function(error, filedata))
-    fs.readFile(`./${randomFile}`, (err, data) => {
+    fs.readFile(path.join(dirPath, randomFile), (err, data) => {
         if (!err) {
             console.log("Transmitting ad: " + randomFile + "to proxy...");
             socket.emit("give-ad", randomFile, data);
