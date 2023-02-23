@@ -4,7 +4,7 @@
   "description": "Peer server for serving/uploading ads. Join the swarm!",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "dev": "nodemon main.js",
     "start": "node main.js"
   },
