@@ -1,7 +1,7 @@
 const { io } = require("socket.io-client");
 const fs = require("fs");
 
-const socket = io(`http://localhost:${process.env.PORT || 3000}`);
+const socket = io(`https://amazing-limiter-378022.uw.r.appspot.com`);
 
 socket.on("error", (err) => console.log(err));
 
@@ -34,8 +34,7 @@ socket.on("get-ad", () => {
         if (!err) {
             console.log("Transmitting ad: " + randomFile + "to proxy...");
             socket.emit("give-ad", randomFile, data);
-        }
-        else{
+        } else{
             //NB: With nodemon running both proxy and server instances, error transmitting puts client page to perma-reloading with no ad rip
             //Fix^ and have to also get client to refresh and get proper ad 
             console.log("Error transmitting ad to proxy! Check ad config settings!");
