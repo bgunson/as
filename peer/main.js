@@ -3,7 +3,6 @@ const fs = require("fs");
 
 const socket = io(`http://localhost:${process.env.PORT || 3000}`);
 
-
 socket.on("error", (err) => console.log(err));
 
 socket.on("give-peer-list", (list) => {
@@ -27,14 +26,14 @@ socket.on("get-ad", () => {
     //Access files in path
     const files = fs.readdirSync(dirPath)
     //Picks a random file up to number of files
-    randomFile = files[Math.floor(Math.random() * files.length)] 
+    const randomFile = files[Math.floor(Math.random() * files.length)] 
   
     //Transmit local ad as file
     //fs.readFile( filepath, function(error, filedata))
     fs.readFile(`./${randomFile}`, (err, data) => {
         if (!err) {
             console.log("Transmitting ad: " + randomFile + "to proxy...");
-            socket.emit("upload-ad", randomFile, data);
+            socket.emit("give-ad", randomFile, data);
         }
         else{
             //NB: With nodemon running both proxy and server instances, error transmitting puts client page to perma-reloading with no ad rip
