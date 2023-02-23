@@ -2,7 +2,7 @@
   "name": "adshare-server",
   "version": "1.0.1",
   "description": "Peer server for serving/uploading ads. Join the swarm!",
-  "main": "",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon main.js",
@@ -17,8 +17,8 @@
     "socket.io-client": "^4.5.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20",
-    "concurrently":"^7.6.0"
+    "concurrently": "^7.6.0",
+    "mocha": "^10.2.0",
+    "nodemon": "^2.0.20"
   }
 }
-

@@ -3,7 +3,6 @@ const fs = require("fs");
 
 const socket = io(`https://amazing-limiter-378022.uw.r.appspot.com`);
 
-
 socket.on("error", (err) => console.log(err));
 
 socket.on("give-peer-list", (list) => {
