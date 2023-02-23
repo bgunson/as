@@ -24,7 +24,8 @@ app.get('/ad', (req, res) => {
 
     if (!socket) {
         // no servers online
-        res.send("ERROR: no ad could be located");
+        console.log("ERROR: No peers online! Serving default ad!");
+        res.sendFile(`bad2.png`, {root: `./backup_ads`});
         return;
     }
     
