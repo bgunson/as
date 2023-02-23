@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 app.get('/ad', (req, res) => {
 
     // choose random server
-    const peerId = Object.keys(peers)[Math.random() * (Object.keys(peers).length-1)];
+    const peerId = Object.keys(peers)[Math.floor(Math.random() * Object.keys(peers).length)];
     
     // get the socket ref of the chosen server
     const socket = peers[peerId];
