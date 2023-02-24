@@ -17,11 +17,10 @@
     "if-env": "latest",
     "express": "^4.18.2",
     "socket.io": "^4.5.4",
-    "socket.io-client": "^4.5.4"
+    "socket.io-client": "^4.5.4",
+    "dotenv": "latest"
   },
   "devDependencies": {
-    "concurrently": "^7.6.0",
-    "dotenv": "latest",
     "nodemon": "^2.0.20"
   }
 }
