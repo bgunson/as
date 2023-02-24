@@ -27,6 +27,10 @@ cd server
 npm install
 npm start
 ```
+- To run the peer server as a Docker container:
+    - Ensure Docker is installed locally.
+    - Run `docker-compose -f docker-compose-prod.yml up` in the root directory
+    - Terminate the peers at any time by pressing Ctrl+C 
 
 Then finally, open the client by going cloning this [repo](https://github.com/bgunson/as-example-client) locally and opening index.html in your preferred web browser. 
 - You can also visit https://bengunson.me/as-example-client 
