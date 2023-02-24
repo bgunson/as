@@ -29,7 +29,7 @@ socket.on("error", (err) => console.log(err));
 
 socket.on("give-peer-list", (list) => {
     peers = list;
-    console.log(`This machine's peer ID is: ${socket.id}`);
+    console.log(`This machine's peer ID is: ${socket.id}\n`);
     console.log(`List of all current active peers in swarm:`);
     console.log(peers);
     console.log("===")
