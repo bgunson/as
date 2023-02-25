@@ -7,6 +7,9 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const os = require('os');
 
+const port = process.env.PORT || 3000;
+const serverURL = process.env.NODE_ENV === 'development' ? `http://localhost:${port}` : `https://amazing-limiter-378022.uw.r.appspot.com`; 
+
 // cache of currently active (connected) servers
 const peers = {};
 
@@ -24,7 +27,8 @@ app.get('/ad', (req, res) => {
 
     if (!socket) {
         // no servers online
-        res.send("ERROR: no ad could be located");
+        console.log("ERROR: No peers online! Serving default ad!");
+        res.sendFile(`bad2.png`, {root: `./backup_ads`});
         return;
     }
     
