@@ -1,14 +1,13 @@
 const express = require('express');
-const { writeFile, readFile } = require('fs');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const os = require('os');
+const { isValidType } = require('./src/validators');
+const { getDefaultAd } = require('./src/defaults');
 
 const port = process.env.PORT || 3000;
-const serverURL = process.env.NODE_ENV === 'development' ? `http://localhost:${port}` : `https://amazing-limiter-378022.uw.r.appspot.com`; 
 
 // cache of currently active (connected) servers
 const peers = {};
@@ -28,26 +27,27 @@ app.get('/ad', (req, res) => {
     if (!socket) {
         // no servers online
         console.log("ERROR: No peers online! Serving default ad!");
-        res.sendFile(`bad2.png`, {root: `./backup_ads`});
+        res.sendFile(getDefaultAd());
         return;
     }
     
     socket.emit("get-ad");  // tell them we want an ad
     // wait for the stream
-    socket.once("give-ad", (id, stream) => {
-        // cache the file on the fs on proxy machine
-        const file = `${os.tmpdir()}/adshare-${id}`; 
-        writeFile(file, stream, {}, (err) => {
-            if (!err) {
-                res.sendFile(file);
-            } else {
-                console.log("something went wrong loading the ad")
-                res.send(err);
-            }
-        });
+    socket.once("give-ad", (fName, stream) => {
+
+        // test file name from peer
+        const fType = isValidType(fName);
         
+        // if fType is undefined (not valid image or asset) bad, else forward to client 
+        if (!fType) {
+            // fallabck here or re-request
+            res.sendFile(getDefaultAd());  
+        } else {
+            res.contentType(fName);
+            res.send(stream);
+        }    
+
     });
-    
 
 });
 
@@ -76,6 +76,6 @@ io.on("connection", (socket) => {
 });
 
 
-server.listen(process.env.PORT || 3000, () => {
+server.listen(port, () => {
   console.log('listening on *:3000');
 });
