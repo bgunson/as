@@ -11,7 +11,7 @@ const { io } = require("socket.io-client");
 const fs = require("fs");
 //Define url of server to which this peer will connect to!
 const port = process.env.PORT || 3000;
-const serverURL = process.env.NODE_ENV === 'development' ? `http://localhost:${port}` : `https://amazing-limiter-378022.uw.r.appspot.com`; 
+const serverURL = process.env.NODE_ENV === 'production' ?`https://amazing-limiter-378022.uw.r.appspot.com` : `http://localhost:${port}`; // default to dev 
 
 if (process.env.NODE_ENV === 'development'){
     console.log("Peer running in dev. mode.");

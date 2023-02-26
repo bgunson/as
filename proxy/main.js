@@ -8,7 +8,7 @@ const io = new Server(server);
 const os = require('os');
 
 const port = process.env.PORT || 3000;
-const serverURL = process.env.NODE_ENV === 'development' ? `http://localhost:${port}` : `https://amazing-limiter-378022.uw.r.appspot.com`; 
+const serverURL = process.env.NODE_ENV === 'production' ? `https://amazing-limiter-378022.uw.r.appspot.com` : `http://localhost:${port}`;   // default is dev 
 
 // cache of currently active (connected) servers
 const peers = {};
