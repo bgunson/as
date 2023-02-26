@@ -1,11 +1,9 @@
 const express = require('express');
-const { writeFile, readFile, ftruncate } = require('fs');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const os = require('os');
 const { isValidType } = require('./src/validators');
 const { getDefaultAd } = require('./src/defaults');
 
