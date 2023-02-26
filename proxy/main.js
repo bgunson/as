@@ -7,9 +7,9 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const os = require('os');
 const { isValidType } = require('./src/validators');
+const { getDefaultAd } = require('./src/defaults');
 
 const port = process.env.PORT || 3000;
-const serverURL = process.env.NODE_ENV === 'production' ? `https://amazing-limiter-378022.uw.r.appspot.com` : `http://localhost:${port}`;   // default is dev 
 
 // cache of currently active (connected) servers
 const peers = {};
@@ -29,7 +29,7 @@ app.get('/ad', (req, res) => {
     if (!socket) {
         // no servers online
         console.log("ERROR: No peers online! Serving default ad!");
-        res.sendFile(`bad2.png`, {root: `./backup_ads`});
+        res.sendFile(getDefaultAd());
         return;
     }
     
@@ -43,9 +43,9 @@ app.get('/ad', (req, res) => {
         // if fType is undefined (not valid image or asset) bad, else forward to client 
         if (!fType) {
             // fallabck here or re-request
-            res.sendStatus(404);    // Not Found
+            res.sendFile(getDefaultAd());  
         } else {
-            res.set('Content-Type', `image/${fType}`);
+            res.contentType(fName);
             res.send(stream);
         }    
 
@@ -78,6 +78,6 @@ io.on("connection", (socket) => {
 });
 
 
-server.listen(process.env.PORT || 3000, () => {
+server.listen(port, () => {
   console.log('listening on *:3000');
 });

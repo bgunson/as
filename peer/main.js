@@ -55,7 +55,7 @@ socket.on("get-ad", () => {
     //fs.readFile( filepath, function(error, filedata))
     fs.readFile(path.join(dirPath, randomFile), (err, data) => {
         if (!err) {
-            console.log("Transmitting ad: " + randomFile + "to proxy...");
+            console.log("Transmitting ad: " + randomFile + " to proxy...");
             socket.emit("give-ad", randomFile, data);
         } else{
             //NB: With nodemon running both proxy and server instances, error transmitting puts client page to perma-reloading with no ad rip
