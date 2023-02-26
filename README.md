@@ -32,8 +32,8 @@ npm start
     - Run `docker-compose -f docker-compose-prod.yml up` in the root directory
     - Terminate the peers at any time by pressing Ctrl+C 
 
-Then finally, open the client by going cloning this [repo](https://github.com/bgunson/as-example-client) locally and opening index.html in your preferred web browser. 
-- You can also visit https://bengunson.me/as-example-client 
+Then finally, open the client by going cloning the [repo](https://github.com/bgunson/as) locally and opening `docs/index.html` in your preferred web browser. 
+- You can also visit https://bengunson.me/as
 
 You should then see an iframed ad which was given by the to the client from the peer server(s) via the proxy.
 
