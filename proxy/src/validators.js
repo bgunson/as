@@ -10,7 +10,7 @@ const isValidType = (fName) => {
     // valid types must be accepted as an http header value for 'Content-Type' of form 'image/type' e.g. 'image/png'
     const validTypes = ['.png', '.jpeg', '.jpg'];      // supported image/file types. Add to list if needed.
 
-    const fType = path.extname(fName);
+    const fType = path.extname(fName.toLowerCase());
     return validTypes.includes(fType);
 }
 

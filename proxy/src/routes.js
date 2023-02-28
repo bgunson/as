@@ -26,6 +26,7 @@ router.use('/ad', (req, res) => {
     }
     
     socket.emit("get-ad");  // tell them we want an ad
+
     // wait for the stream
     socket.once("give-ad", (fName, stream) => {
 

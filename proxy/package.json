@@ -4,7 +4,7 @@
   "description": "Proxy server.",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "dev": "nodemon main.js",
     "start": "node main.js"
   },
@@ -17,6 +17,7 @@
     "socket.io-client": "^4.5.4"
   },
   "devDependencies": {
+    "chai": "^4.3.7",
     "concurrently": "^7.6.0",
     "mocha": "^10.2.0",
     "nodemon": "^2.0.20"

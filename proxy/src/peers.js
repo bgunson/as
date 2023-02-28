@@ -19,13 +19,13 @@ class Peers {
     }
 
     /**
-     * Get a (random) peer
+     * Get a (random for now) peer. Note this could return the id of the same peer who triggers the event.
      * @returns A socket reference to the peer
      */
     choosePeer() {
-        // choose random server
+        // choose random peer
         const peerId = Object.keys(this._peers)[Math.floor(Math.random() * Object.keys(this._peers).length)];
-    
+
         // get the socket ref of the chosen server
         return this._peers[peerId];
     }
