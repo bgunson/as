@@ -47,7 +47,7 @@ router.use('/ad',
             res.sendFile(getDefaultAd());
         } else {
             socket.emit("get-ad");  // tell them we want an ad
-
+            
             // wait for the stream
             socket.once("give-ad", (fName, stream) => {
 
@@ -62,7 +62,11 @@ router.use('/ad',
                     res.contentType(fName);
                     res.send(stream);
                 }    
-            }); 
+            });
+            
+            setTimeout(() => {
+                res.sendFile(getDefaultAd());
+            }, 2000);
         }
     }
 );
