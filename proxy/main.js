@@ -58,7 +58,7 @@ io.on("connection", (socket) => {
     peers[socket.id] = socket;
 
     socket.on("disconnect", () => {
-        console.log(`${socket.id} disconnected`)
+        console.log(`${socket.id} disconnected`);
         // this server disconected, remove from local cache so they wont be picked next time a client hails an ad
         delete peers[socket.id];
         io.emit("give-peer-list", Object.keys(peers))

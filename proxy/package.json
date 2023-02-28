@@ -4,13 +4,8 @@
   "description": "Proxy server.",
   "main": "main.js",
   "scripts": {
-<<<<<<< HEAD
-    "test": "mocha",
-    "dev": "nodemon mainProxy.js",
-=======
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon main.js",
->>>>>>> origin/main
     "start": "node main.js"
   },
   "keywords": [],

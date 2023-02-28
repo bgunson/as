@@ -1,14 +1,8 @@
 {
   "name": "adshare-server",
-<<<<<<< HEAD
-  "version": "1.0.1",
-  "description": "Peer server for serving/uploading ads. Join the swarm!",
-  "main": "main.js",
-=======
   "version": "0.1.3",
   "description": "Peer server for serving/uploading ads to the proxy server. Join the swarm!",
-  "main": "",
->>>>>>> origin/main
+  "main": "main.js",
   "scripts": {
     "test": "mocha",
     "dev": "nodemon main.js",
@@ -27,11 +21,8 @@
     "dotenv": "latest"
   },
   "devDependencies": {
-<<<<<<< HEAD
     "concurrently": "^7.6.0",
     "mocha": "^10.2.0",
-=======
->>>>>>> origin/main
     "nodemon": "^2.0.20"
   }
 }
