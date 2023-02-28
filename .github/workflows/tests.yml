@@ -25,7 +25,7 @@ jobs:
       -
         name: Test Peer
         run: npm test
-        working_directory: ./peer
+        working-directory: ./peer
 
   test-proxy:
     runs-on: ubuntu-latest
