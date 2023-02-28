@@ -12,21 +12,30 @@ To run, make sure you have Node and npm installed on your computer and run:
 
 Next in the following order in separate terminals (processes):
 
-Run the proxy:
+Running proxy server locally:
 ```
 cd proxy
 npm install
-npm run start
+npm start
 ```
+- NB: A working proxy is also live at [adshare.cloud](http://adshare.cloud).
 
-Run a server (you can run any number of these in multiple terminals to simulate a distrubuted system):
+Running peer servers locally:
+- You can run any number of these in multiple terminals to simulate a distrubuted system.
 ```
 cd server
 npm install
-npm run start
+npm start
 ```
+- To run the peer server as a Docker container:
+    - Ensure Docker is installed locally.
+    - Run `docker-compose -f docker-compose-prod.yml up` in the root directory
+    - Terminate the peers at any time by pressing Ctrl+C 
 
-Then finally, open the client by going to `client/index.html` or at https://bengunson.me/as-example-client, opening it in your preferred web browser. There you will see an iframed ad which was given by the to the client from the server via the proxy.
+Then finally, open the client by going cloning the [repo](https://github.com/bgunson/as) locally and opening `docs/index.html` in your preferred web browser. 
+- You can also visit [https://bengunson.me/as-example-client](https://bengunson.me/as-example-client)
+
+You should then see an iframed ad which was given by the to the client from the peer server(s) via the proxy.
 
 ___
 
