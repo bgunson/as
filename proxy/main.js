@@ -16,6 +16,8 @@ const registerHandlers = require('./src/handlers');
 
 const port = process.env.PORT || 3000;
 
+app.enable("trust proxy");
+
 app.set('peers', peers);    // this is so we can access the peer list in http endpoints e.g. req.app.get('peers') returns this object
 app.use(routes);
 
