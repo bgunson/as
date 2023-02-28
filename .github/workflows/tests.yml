@@ -1,10 +1,11 @@
 name: tests
 
 on:
-  push:
-    branches:
-      - 'main'
+  push
 
+env:
+  NODE_ENV: test
+  
 jobs: 
   test-peer:
     runs-on: ubuntu-latest
