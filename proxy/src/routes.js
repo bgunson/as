@@ -44,8 +44,16 @@ router.get('/ad',
         // ask all peers for an ad
         io.emit('get-ad');
 
+        // timeout default ad after 2 sec
+        let timeoutAd = setTimeout(() => {
+            res.sendFile(getDefaultAd());
+        }, 2000);
+
         // wait for first peer to respond
         peers.once('give-ad', (fName, stream) => {
+
+            clearTimeout(timeoutAd);
+
             // test file name from peer
             const fType = isValidType(fName);
             
