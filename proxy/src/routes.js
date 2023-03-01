@@ -36,44 +36,28 @@ router.get('/ad',
      * @param {express.Response} res - Response: a file containing advertisment
      */
     (req, res) => {
-        // get the peers
-        const peers = req.app.get('peers');
-        // choose a peer
-        const socket = peers.choosePeer();
 
-        if (!socket) {
-            // no servers online
-            console.log("ERROR: No peers online! Serving default ad!");
-            res.sendFile(getDefaultAd());
-        } else {
+        const io = req.app.get('io');   // main socketio server instance
+        
+        const peers = req.app.get('peers'); // the peers
 
-            // timeout after 2 sec with default ad
-            let timeoutaAd = setTimeout(() => {
-                res.sendFile(getDefaultAd());
-            }, 2000);
+        // ask all peers for an ad
+        io.emit('get-ad');
 
-            socket.emit("get-ad");  // tell them we want an ad
+        // wait for first peer to respond
+        peers.once('give-ad', (fName, stream) => {
+            // test file name from peer
+            const fType = isValidType(fName);
             
-            // wait for the stream
-            socket.once("give-ad", (fName, stream) => {
-
-                // test file name from peer
-                const fType = isValidType(fName);
-                
-                // if fType is undefined (not valid image or asset) bad, else forward to client 
-                if (!fType) {
-                    // fallabck here or re-request
-                    res.sendFile(getDefaultAd());  
-                } else {
-                    res.contentType(fName);
-                    res.send(stream);
-                } 
-                
-                // clear the timeout
-                clearTimeout(timeoutaAd); 
-            });
-            
-        }
+            // if fType is undefined (not valid image or asset) bad, else forward to client 
+            if (!fType) {
+                // fallabck here or re-request
+                res.sendFile(getDefaultAd());  
+            } else {
+                res.contentType(fName);
+                res.send(stream);
+            } 
+        });
     }
 );
 
