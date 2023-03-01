@@ -8,7 +8,7 @@ const router = express.Router();
 const { getDefaultAd } = require('./defaults');
 const { isValidType } = require('./validators');
 
-router.use('/version', 
+router.get('/version', 
     /**
      * @param {express.Request} req - GET /version 
      * @param {express.Response} res  Response: version from package.json
@@ -19,7 +19,7 @@ router.use('/version',
     }
 );
 
-router.use('/peers', 
+router.get('/peers', 
     /**
      * @param {express.Request} req - GET /peers
      * @param {express.Response} res - Response: give the peer list of ids
@@ -30,7 +30,7 @@ router.use('/peers',
     }
 );
 
-router.use('/ad', 
+router.get('/ad', 
     /**
      * @param {express.Request} req - GET /ad
      * @param {express.Response} res - Response: a file containing advertisment
@@ -46,6 +46,12 @@ router.use('/ad',
             console.log("ERROR: No peers online! Serving default ad!");
             res.sendFile(getDefaultAd());
         } else {
+
+            // timeout after 2 sec with default ad
+            let timeoutaAd = setTimeout(() => {
+                res.sendFile(getDefaultAd());
+            }, 2000);
+
             socket.emit("get-ad");  // tell them we want an ad
             
             // wait for the stream
@@ -61,12 +67,12 @@ router.use('/ad',
                 } else {
                     res.contentType(fName);
                     res.send(stream);
-                }    
+                } 
+                
+                // clear the timeout
+                clearTimeout(timeoutaAd); 
             });
             
-            setTimeout(() => {
-                res.sendFile(getDefaultAd());
-            }, 2000);
         }
     }
 );
