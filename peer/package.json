@@ -14,13 +14,14 @@
   "author": "Bennett Gunson",
   "license": "ISC",
   "dependencies": {
-    "if-env": "latest",
+    "dotenv": "latest",
     "express": "^4.18.2",
+    "if-env": "latest",
     "socket.io": "^4.5.4",
-    "socket.io-client": "^4.5.4",
-    "dotenv": "latest"
+    "socket.io-client": "^4.5.4"
   },
   "devDependencies": {
+    "chai": "^4.3.7",
     "concurrently": "^7.6.0",
     "mocha": "^10.2.0",
     "nodemon": "^2.0.20"
