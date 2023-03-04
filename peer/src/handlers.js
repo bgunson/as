@@ -5,12 +5,10 @@ const { Socket } = require('socket.io-client');
 const adDir = path.join(process.cwd(), '/ads'); // ad dir
 
 /**
- * 
- * @param {Socket} io the proxy socket
  * @param {Socket} peer - the peer socket.io-client instance
  * @returns api functions
  */
-module.exports = (peer, io) => {
+module.exports = (peer) => {
 
     let peers;
 
@@ -55,7 +53,7 @@ module.exports = (peer, io) => {
         if(validAds.length == 0){
             console.log("No valid ads available, will need to replicate")
             //sends id to indicate which peer is requesting ad
-            io.emit("request-replicate", peer.id)
+            peer.emit("request-replicate", peer.id);
         }
 
 
@@ -70,9 +68,16 @@ module.exports = (peer, io) => {
         
     }
 
-    const uploadAd = () => {
-        // maybe:  
-        // peer.emit("replicate", newAd);
+
+    /**
+     * 
+     * @param {string} name - name of file 
+     * @param {Buffer} ad - data 
+     */
+    const uploadAd = (name, ad) => {
+        fs.writeFile(name, ad);
+
+        // peer.emit a general replication message (if upload was called via http api)
     }
 
     const deleteAd = () => {

@@ -33,6 +33,8 @@ module.exports = () => {
         socket.emit("get-peer-list");
     });
 
+    socket.on('replicate-response', (name, ad) => handlers.uploadAd(name, ad));
+
     socket.on('get-ad', (name) => {
         const ad = handlers.getAd(name);
         fs.readFile(ad, (err, data) => {
