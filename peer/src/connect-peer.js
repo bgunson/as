@@ -5,7 +5,7 @@ const path = require('path');
 const registerHandlers = require('./handlers');
 
 const port = process.env.PORT || 3000;
-const serverURL = process.env.NODE_ENV === 'production' ? `https://amazing-limiter-378022.uw.r.appspot.com` : `http://localhost:${port}`; // default to dev 
+const serverURL = process.env.NODE_ENV === 'production' ? `https://14d8-68-147-173-125.ngrok.io/` : `http://localhost:${port}`; // default to dev 
 
 /**
  * Utility function to set up socket.io-client for connecting to proxy
@@ -14,7 +14,7 @@ const serverURL = process.env.NODE_ENV === 'production' ? `https://amazing-limit
 module.exports = () => {
 
     let peers;  // other peers
-
+    
     if (process.env.NODE_ENV === 'production'){
         console.log(`Peer running in prod. mode connecting to ${serverURL}`);
     } else {
@@ -33,7 +33,9 @@ module.exports = () => {
         socket.emit("get-peer-list");
     });
 
-    socket.on('replicate-response', (name, ad) => handlers.uploadAd(name, ad));
+    socket.on('replicate-response', (name, ad) => {
+        console.log("asdasd");
+        handlers.uploadAd(name, ad)});
 
     socket.on('get-ad', (name) => {
         const ad = handlers.getAd(name);

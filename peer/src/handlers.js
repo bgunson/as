@@ -83,12 +83,17 @@ module.exports = (peer) => {
     const deleteAd = () => {
 
     }
+    const replicateResponse = (name,ad) => {
+        
+        console.log("abc");
+    }
 
     return {
         getAd,
         updatePeerList,
         uploadAd,
-        deleteAd
+        deleteAd,
+        replicateResponse
     }
 
 }
