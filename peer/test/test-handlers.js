@@ -17,18 +17,20 @@ describe('handlers', () => {
         peer.close();
     });
 
-    it('#getAd() should return a valid ad path', () => {
+    it('#uploadAd() should work', () => {
+        handlers.uploadAd("fake.png", Buffer.from("data"));
         const ad = handlers.getAd();
+        assert.equal(fs.existsSync(ad), true);
+    });
+
+    it('#getAd() should return a valid ad path', () => {
+        const ad = handlers.getAd("fake.png");
         assert.equal(fs.existsSync(ad), true);
     });
 
     it('#updatePeerList() should work', () => {
         const fakeList = ['x', 'y', 'z'];
         assert.equal(handlers.updatePeerList(fakeList), fakeList);
-    });
-
-    it('#uploadAd() should work', () => {
-
     });
 
     it('#deleteAd() should work', () => {

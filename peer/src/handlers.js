@@ -75,7 +75,7 @@ module.exports = (peer) => {
      * @param {Buffer} ad - data 
      */
     const uploadAd = (name, ad) => {
-        fs.writeFile(name, ad);
+        fs.writeFileSync(path.join(adDir, name), ad);
 
         // peer.emit a general replication message (if upload was called via http api)
     }
