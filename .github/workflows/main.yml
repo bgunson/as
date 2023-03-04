@@ -10,6 +10,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: proxy
+
 jobs:
   deploy:
     name: Deploying to Google Cloud
@@ -25,7 +29,6 @@ jobs:
       uses: 'google-github-actions/deploy-appengine@v1'
       with:
         project_id: ${{ secrets.PROJECT_ID }}
-        working_directory: ./proxy
         deliverables: app.yaml
         
     - name: Test
