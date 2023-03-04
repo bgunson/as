@@ -25,7 +25,7 @@ jobs:
       uses: 'google-github-actions/deploy-appengine@v1'
       with:
         project_id: ${{ secrets.PROJECT_ID }}
-        working_directory: as/proxy
+        working_directory: ./proxy
         deliverables: app.yaml
         
     - name: Test
