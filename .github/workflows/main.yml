@@ -21,6 +21,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       
+    - name: npm install
+      working-directory: proxy
+      run: npm install && npm run build
+      
     - id: 'auth'
       uses: 'google-github-actions/auth@v1'
       with:
