@@ -29,9 +29,7 @@ jobs:
     - id: 'deploy'
       uses: 'google-github-actions/deploy-appengine@v1'
       with:
-        project_id: amazing-limiter-378022
         working_directory: proxy
-        deliverables: app.yaml
         
     - name: Test
       run: curl "${{ steps.deploy.outputs.url }}"
