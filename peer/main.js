@@ -7,7 +7,6 @@
 
 //Load env vars from .env file into process.env vars here
 require('dotenv').config();
-
 const express = require('express')
 const app = express()
 

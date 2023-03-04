@@ -8,7 +8,7 @@ const registerHandler = require('../src/handlers');
 
 describe("handler", () => {
     let io, serverSocket, clientSocket, handler;
-    let peers = new Peers();
+    const peers = new Peers();
 
     before((done) => {
         const httpServer = createServer();
@@ -31,12 +31,20 @@ describe("handler", () => {
         clientSocket.close();
     });
 
-    it("'get-peer-list' work", (done) => {
+    it("#get-peer-list() work", (done) => {
         handler.getPeerList();
         clientSocket.once('give-peer-list', (list) => {
             assert.deepEqual(list, peers.getPeerList());
             done();
         })
+    });
+
+    it("#giveAd() should work", (done) => {
+        peers.once('give-ad', (name, _) => {
+            assert.equal(name, "testad");
+            done();
+        });
+        handler.giveAd("testad", null);
     });
 
     // TODO: implement actual test case when implementing
@@ -48,7 +56,7 @@ describe("handler", () => {
     //     })
     // });
 
-    it("'disconnect' should work", (done) => {
+    it("#onDisconnect() should work", (done) => {
         handler.onDisconnect();
         clientSocket.once('give-peer-list', (list) => {
             // list should be empty
