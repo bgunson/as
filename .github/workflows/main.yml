@@ -10,14 +10,15 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-defaults:
-  run:
-    working-directory: proxy
+
 
 jobs:
   deploy:
     name: Deploying to Google Cloud
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: proxy
 
     steps:
     - id: 'auth'
