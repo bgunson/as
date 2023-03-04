@@ -46,9 +46,8 @@ module.exports = (io, socket, peers) => {
     const requestReplicate = (ad) => {
         // TODO: potential implmentation
         console.log(`${socket.id} requesting ad from peers`);
-        // const otherPeer = peers.choosePeer();
-        const name = "AAA";
-        peers.emit('replicate-response', name, ad);      // peers need to be waiting for this event
+
+        io.emit('replicate-response', ad);     
 
         // then wait for feedback from otherPeer and emit back to this peer 'socket'
 
