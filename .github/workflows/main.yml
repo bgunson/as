@@ -1,0 +1,29 @@
+name: Deploy to GAE
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploying to Google Cloud
+    runs-on: ubuntu-latest
+
+    steps:
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+    - id: 'deploy'
+      uses: 'google-github-actions/deploy-appengine@v1'
+      with:
+        project_id: ${{ secrets.GCP_PROJECT }}
+        working_directory: /proxy
+        deliverables: app.yaml
