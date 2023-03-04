@@ -3,10 +3,12 @@
  */
 
 const { Socket } = require("socket.io");
+const EventEmitter = require('events');
 
-class Peers {
+class Peers extends EventEmitter {
 
     constructor() {
+        super();
         this._peers = {};
     }
 

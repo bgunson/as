@@ -1,18 +1,29 @@
 {
   "name": "adshare-proxy",
-  "version": "0.1.4",
+  "version": "0.1.5-beta.2",
   "description": "Proxy server.",
   "main": "main.js",
   "scripts": {
-    "test": "mocha",
-    "dev": "nodemon main.js",
-    "start": "node main.js"
+    "pretest": "echo \" \t---Preparing tests...---\"",
+    "start:test": "mocha",
+    "posttest": "echo \" \t---Test run completed...---\"",
+    "start:dev": "nodemon main.js",
+    "start:prod": "node main.js",
+    "test": "env-cmd -e test --fallback --verbose cross-env npm run start:test",
+    "start": "env-cmd -e production --fallback cross-env npm run start:prod",
+    "dev": "env-cmd -e development --fallback cross-env npm run start:dev"
   },
   "keywords": [],
   "author": "Bennett Gunson",
   "license": "ISC",
   "dependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "latest",
+    "dotenv-defaults": "^5.0.2",
+    "env-cmd": "^10.1.0",
+    "envinfo": "^7.8.1",
     "express": "^4.18.2",
+    "fancy-log": "^2.0.0",
     "socket.io": "^4.5.4",
     "socket.io-client": "^4.5.4"
   },

@@ -21,6 +21,15 @@ module.exports = (io, socket, peers) => {
     }
 
     /**
+     * When a peer responds with an ad
+     * @param {string} id - name or id of ad 
+     * @param {Buffer} ad - ad bytes
+     */
+    const giveAd = (id, ad) => {
+        peers.emit("give-ad", id, ad);
+    }
+
+    /**
      * When a peer disconnects
      */
     const onDisconnect = () => {
@@ -49,10 +58,12 @@ module.exports = (io, socket, peers) => {
     socket.on('replicate', replicate);
     socket.on('get-peer-list', getPeerList);
     socket.on('disconnect', onDisconnect);
+    socket.on('give-ad', giveAd);
 
     // return functions so we can test
     return {
         getPeerList,
+        giveAd,
         replicate,
         onDisconnect
     };

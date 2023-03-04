@@ -16,6 +16,9 @@ const registerHandlers = require('./src/handlers');
 
 const port = process.env.PORT || 3000;
 
+app.enable("trust proxy");
+
+app.set('io', io);
 app.set('peers', peers);    // this is so we can access the peer list in http endpoints e.g. req.app.get('peers') returns this object
 app.use(routes);
 
@@ -36,6 +39,7 @@ const onConnection = (socket) => {
 }
 
 io.on("connection", onConnection);
+
 
 server.listen(port, () => {
   console.log('listening on *:3000');

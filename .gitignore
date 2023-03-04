@@ -1,7 +1,6 @@
 .vscode
 node_modules
 .env
-package-lock.json
 x*.js
 docker-compose-dev.yml
-peer/ads/
+peer/ads/**
