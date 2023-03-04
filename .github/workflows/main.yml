@@ -19,7 +19,7 @@ jobs:
     - id: 'auth'
       uses: 'google-github-actions/auth@v1'
       with:
-        credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+        credentials_json: secrets.GCP_CREDENTIALS
 
     - id: 'deploy'
       uses: 'google-github-actions/deploy-appengine@v1'
@@ -27,3 +27,6 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT }}
         working_directory: /proxy
         deliverables: app.yaml
+        
+    - name: Test
+      run: curl "${{ steps.deploy.outputs.url }}"
