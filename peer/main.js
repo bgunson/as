@@ -10,14 +10,13 @@ require('dotenv').config();
 const { io } = require("socket.io-client");
 const fs = require("fs");
 //Define url of server to which this peer will connect to!
-const port = process.env.PORT || 3000;
-const serverURL = process.env.NODE_ENV === 'production' ?`https://amazing-limiter-378022.uw.r.appspot.com` : `http://localhost:${port}`; // default to dev 
+const serverURL = process.env.SERVER_URL; 
 
 if (process.env.NODE_ENV === 'development'){
     console.log("Peer running in dev. mode.");
 } else if (process.env.NODE_ENV === 'production'){
     console.log("Peer running in prod. mode.");
-}else{
+}else {
     //....
     console.log("Peer running in FULL SEND mode.");
 }
@@ -29,8 +28,8 @@ socket.on("error", (err) => console.log(err));
 
 socket.on("give-peer-list", (list) => {
     peers = list;
-    console.log(`This machine's peer ID is: ${socket.id}\n`);
-    console.log(`List of all current active peers in swarm:`);
+    console.log(`Current peer instance ID is: ${socket.id}\n`);
+    console.log(`List of all current active peers in this swarm:`);
     console.log(peers);
     console.log("===")
 });
@@ -40,7 +39,11 @@ socket.on("connect", () => {
     socket.emit("get-peer-list");
 });
 
-//
+socket.on("disconnect", ()=>{
+    console.log(`Disconnected from ${serverURL}!`);
+})
+
+// 'get-ad' event called by proxy server, choose random ad from folder and send it
 socket.on("get-ad", () => {
     //Choose the ad that will be sent to the proxy by selecting a random file
     const path = require('path');
