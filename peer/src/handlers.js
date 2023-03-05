@@ -49,20 +49,21 @@ module.exports = (peer) => {
             }
         }
 
-        // if no validAd, send request to proxy to ask ad from other peers 
-        if(validAds.length == 0){
+        //let adPath = " ";
+        if(validAds.length > 0){
+            if (!name) {
+                // Pick a random file up to number of files
+                name = validAds[Math.floor(Math.random() * validAds.length)];
+            }
+
+            var adPath = path.join(adDir, name);
+
+            // if no validAd, send request to proxy to ask ad from other peers 
+        }else{
             console.log("No valid ads available, will need to replicate")
             //sends id to indicate which peer is requesting ad
             peer.emit("request-replicate", peer.id);
         }
-
-
-        if (!name) {
-            // Pick a random file up to number of files
-            name = validAds[Math.floor(Math.random() * validAds.length)];
-        }
-
-        const adPath = path.join(adDir, name);
 
         return adPath;
         
@@ -83,17 +84,12 @@ module.exports = (peer) => {
     const deleteAd = () => {
 
     }
-    const replicateResponse = (name,ad) => {
-        
-        console.log("abc");
-    }
 
     return {
         getAd,
         updatePeerList,
         uploadAd,
-        deleteAd,
-        replicateResponse
+        deleteAd
     }
 
 }

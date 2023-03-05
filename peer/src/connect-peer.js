@@ -5,7 +5,7 @@ const path = require('path');
 const registerHandlers = require('./handlers');
 
 const port = process.env.PORT || 3000;
-const serverURL = process.env.NODE_ENV === 'production' ? `https://14d8-68-147-173-125.ngrok.io/` : `http://localhost:${port}`; // default to dev 
+const serverURL = process.env.NODE_ENV === 'production' ? `https://5b9a-68-147-173-125.ngrok.io/` : `http://localhost:${port}`; // default to dev 
 
 /**
  * Utility function to set up socket.io-client for connecting to proxy
@@ -35,7 +35,10 @@ module.exports = () => {
 
     socket.on('replicate-response', (name, ad) => {
         console.log("asdasd");
-        handlers.uploadAd(name, ad)});
+        console.log(name);
+        console.log(ad)
+        handlers.uploadAd(name, ad)
+    });
 
     socket.on('get-ad', (name) => {
         const ad = handlers.getAd(name);
