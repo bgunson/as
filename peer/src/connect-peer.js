@@ -34,24 +34,24 @@ module.exports = () => {
     });
 
     socket.on('replicate-response', (name, ad) => {
-        console.log("asdasd");
-        console.log(name);
-        console.log(ad)
+        console.log(`We received an ad called '${name}'`);
         handlers.uploadAd(name, ad)
     });
 
     socket.on('get-ad', (name) => {
         const ad = handlers.getAd(name);
-        fs.readFile(ad, (err, data) => {
-            if (!err) {
-                console.log("Transmitting ad: " + ad + " to proxy...");
-                socket.emit("give-ad", path.basename(ad), data);
-            } else {
-                //NB: With nodemon running both proxy and server instances, error transmitting puts client page to perma-reloading with no ad rip
-                //Fix^ and have to also get client to refresh and get proper ad 
-                console.log("Error transmitting ad to proxy! Check ad config settings!");
-            }
-        });
+        if (ad) {
+            fs.readFile(ad, (err, data) => {
+                if (!err) {
+                    console.log("Transmitting ad: " + ad + " to proxy...");
+                    socket.emit("give-ad", path.basename(ad), data);
+                } else {
+                    //NB: With nodemon running both proxy and server instances, error transmitting puts client page to perma-reloading with no ad rip
+                    //Fix^ and have to also get client to refresh and get proper ad 
+                    console.log("Error transmitting ad to proxy! Check ad config settings!");
+                }
+            });
+        }
     });
 
     socket.on('give-peer-list', handlers.updatePeerList);
