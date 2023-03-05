@@ -21,6 +21,17 @@ class Peers extends EventEmitter {
     }
 
     /**
+     * Get all peers excluding one by id
+     * @param {string} id - of the peer we are excluding 
+     * @returns array of socket references
+     */
+    exclude(id) {
+        let all = {...this._peers}; // copy peers
+        delete all[id];
+        return Object.values(all);  // sockets 
+    }
+
+    /**
      * Get a (random for now) peer. Note this could return the id of the same peer who triggers the event.
      * @returns A socket reference to the peer
      */

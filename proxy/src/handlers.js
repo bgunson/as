@@ -47,7 +47,9 @@ module.exports = (io, socket, peers) => {
         // TODO: potential implmentation
         console.log(`${socket.id} requesting ad from peers`);
 
-        io.emit('get-ad');     
+        peers.exclude(socket.id).forEach((peer) => {
+            peer.emit('get-ad');
+        });
         
         peers.once('give-ad', (name,ad) => socket.emit('replicate-response', name,ad) );
         
