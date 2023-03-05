@@ -16,6 +16,10 @@ describe('peers', () => {
         assert.equal(peers.getPeerList().length, 1);
     });
 
+    it('should exclude a peer', () => {
+        assert.equal(peers.exclude('test').length, 0);
+    });
+
     it('should choose a peer', () => {
         let p = peers.choosePeer();
         assert.deepEqual(p, mockPeer);
@@ -24,6 +28,6 @@ describe('peers', () => {
     it('should remove the peer', () => {
         peers.removePeer(mockPeer);
         assert.equal(peers.getPeerList().length, 0);
-    })
+    });
     
 });
