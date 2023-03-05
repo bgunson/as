@@ -1,6 +1,6 @@
 {
   "name": "adshare-peer-server",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Peer server for serving/uploading ads to the proxy server. Join the swarm!",
   "main": "main.js",
   "scripts": {
@@ -17,6 +17,7 @@
   "author": "Bennett Gunson",
   "license": "ISC",
   "dependencies": {
+    "chai": "^4.3.7",
     "cross-env": "^7.0.3",
     "dotenv": "latest",
     "dotenv-defaults": "^5.0.2",
@@ -24,6 +25,7 @@
     "envinfo": "^7.8.1",
     "express": "latest",
     "fancy-log": "^2.0.0",
+    "if-env": "latest",
     "readline-sync": "^1.4.10",
     "socket.io": "latest",
     "socket.io-client": "latest"

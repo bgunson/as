@@ -43,11 +43,16 @@ module.exports = (io, socket, peers) => {
      * This peer wants to replicate an ad
      * @param {unknown} ad ?
      */
-    const replicate = (ad) => {
+    const requestReplicate = (socket) => {
         // TODO: potential implmentation
+        console.log(`${socket.id} requesting ad from peers`);
 
-        // const otherPeer = peers.choosePeer();
-        // otherPeer.emit('replicate', ad);      // peers need to be waiting for this event
+        peers.exclude(socket.id).forEach((peer) => {
+            peer.emit('ad-replicate');
+        });
+        
+        peers.once('give-ad', (name,ad) => socket.emit('replicate-response', name,ad) );
+        
 
         // then wait for feedback from otherPeer and emit back to this peer 'socket'
 
@@ -55,17 +60,17 @@ module.exports = (io, socket, peers) => {
     }
 
     // register handlers w/ socket
-    socket.on('replicate', replicate);
+    socket.on('request-replicate', () => requestReplicate(socket));
     socket.on('get-peer-list', getPeerList);
     socket.on('disconnect', onDisconnect);
     socket.on('give-ad', giveAd);
-
+   
     // return functions so we can test
     return {
+        requestReplicate,
         getPeerList,
-        giveAd,
-        replicate,
-        onDisconnect
+        onDisconnect,
+        giveAd
     };
 }
 
