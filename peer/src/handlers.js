@@ -57,7 +57,7 @@ module.exports = (peer) => {
         fs.readFile(ad, (err, data) => {
             if (!err) {
                 console.log("Transmitting ad: " + ad + " to proxy...");
-                socket.emit("give-ad", path.basename(ad), data);
+                peer.emit("give-ad", path.basename(ad), data);
             } else {
                 //NB: With nodemon running both proxy and server instances, error transmitting puts client page to perma-reloading with no ad rip
                 //Fix^ and have to also get client to refresh and get proper ad 
