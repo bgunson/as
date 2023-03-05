@@ -34,8 +34,10 @@ module.exports = () => {
     });
 
     socket.on('replicate-response', (name, ad) => {
-        console.log(`We received an ad called '${name}'`);
+
         handlers.uploadAd(name, ad)
+  
+
     });
 
     socket.on('get-ad', (name) => {
@@ -55,6 +57,20 @@ module.exports = () => {
     });
 
     socket.on('give-peer-list', handlers.updatePeerList);
+
+
+    socket.on('ad-replicate', (name, ad) => {
+ 
+        validAd = [];
+        handlers.checkNumOfValidAd(validAd);
+        if(validAd.length > 0){
+            name = validAds[Math.floor(Math.random() * validAds.length)];
+            var adPath = path.join(adDir, name);
+            //sends back to proxy
+            socket.emit("give-ad", path.basename(name), ad)
+        }
+
+    });
 
     return handlers;
 

@@ -28,28 +28,8 @@ module.exports = (peer) => {
      * @returns well-formed path to the ad file on this peer, false if invalid ad
      */
     const getAd = (name) => {
-
-        /**
-         * extracts file extension from a given file name
-         * @param {string} filename The name of the file 
-         * @returns file extension of the input file
-         */
-        const getFileExt = (filename) => {
-            return filename.substring(filename.lastIndexOf('.')+1, filename.length) || filename;
-        }
-
-        //Access files in path
-        const files = fs.readdirSync(adDir);
-
-        validAds = []
-        //first check all files under ads folder to make sure there is no valid ad even if there are files
-        for(let file of files){
-            if(getFileExt(file) == 'png' || getFileExt(file) == 'jpeg' || getFileExt(file) == 'jpg'){
-                validAds.push(file);
-            }
-        }
-
-        //let adPath = " ";
+        validAds = [];
+        checkNumOfValidAd(validAds);
         if(validAds.length > 0){
             if (!name) {
                 // Pick a random file up to number of files
@@ -85,11 +65,36 @@ module.exports = (peer) => {
 
     }
 
+    const checkNumOfValidAd = (validAd) => {
+        /**
+         * extracts file extension from a given file name
+         * @param {string} filename The name of the file 
+         * @returns file extension of the input file
+         */
+        const getFileExt = (filename) => {
+            return filename.substring(filename.lastIndexOf('.')+1, filename.length) || filename;
+        }
+
+        //Access files in path
+        const files = fs.readdirSync(adDir);
+
+        //first check all files under ads folder to make sure there is no valid ad even if there are files
+        for(let file of files){
+            if(getFileExt(file) == 'png' || getFileExt(file) == 'jpeg' || getFileExt(file) == 'jpg'){
+                validAds.push(file);
+            }
+        }
+
+        return validAd;
+
+    }
+
     return {
         getAd,
         updatePeerList,
         uploadAd,
-        deleteAd
+        deleteAd,
+        checkNumOfValidAd 
     }
 
 }
