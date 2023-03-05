@@ -43,16 +43,7 @@ module.exports = () => {
     socket.on('get-ad', (name) => {
         const ad = handlers.getAd(name);
         if (ad) {
-            fs.readFile(ad, (err, data) => {
-                if (!err) {
-                    console.log("Transmitting ad: " + ad + " to proxy...");
-                    socket.emit("give-ad", path.basename(ad), data);
-                } else {
-                    //NB: With nodemon running both proxy and server instances, error transmitting puts client page to perma-reloading with no ad rip
-                    //Fix^ and have to also get client to refresh and get proper ad 
-                    console.log("Error transmitting ad to proxy! Check ad config settings!");
-                }
-            });
+            handlers.giveAd(ad);
         }
     });
 
@@ -67,7 +58,7 @@ module.exports = () => {
             name = validAds[Math.floor(Math.random() * validAds.length)];
             var adPath = path.join(adDir, name);
             //sends back to proxy
-            socket.emit("give-ad", path.basename(name), ad)
+            handlers.giveAd(adPath);
         }
 
     });

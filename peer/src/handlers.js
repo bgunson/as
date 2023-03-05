@@ -49,6 +49,23 @@ module.exports = (peer) => {
         
     }
 
+    /**
+     * Emit ad bytes back to proxy
+     * @param {string} ad 
+     */
+    const giveAd = (ad) => {
+        fs.readFile(ad, (err, data) => {
+            if (!err) {
+                console.log("Transmitting ad: " + ad + " to proxy...");
+                socket.emit("give-ad", path.basename(ad), data);
+            } else {
+                //NB: With nodemon running both proxy and server instances, error transmitting puts client page to perma-reloading with no ad rip
+                //Fix^ and have to also get client to refresh and get proper ad 
+                console.log("Error transmitting ad to proxy! Check ad config settings!");
+            }
+        });
+    }
+
 
     /**
      * 
@@ -91,6 +108,7 @@ module.exports = (peer) => {
 
     return {
         getAd,
+        giveAd,
         updatePeerList,
         uploadAd,
         deleteAd,
