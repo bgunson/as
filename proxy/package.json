@@ -1,6 +1,6 @@
 {
   "name": "adshare-proxy",
-  "version": "0.1.5-beta",
+  "version": "0.2.0",
   "description": "Proxy server.",
   "main": "main.js",
   "scripts": {
