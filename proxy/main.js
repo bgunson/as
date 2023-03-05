@@ -22,13 +22,9 @@ app.set('io', io);
 app.set('peers', peers);    // this is so we can access the peer list in http endpoints e.g. req.app.get('peers') returns this object
 app.use(routes);
 
-/**
- * TODO: replace this with:
- * app.use(express.static('public')); // to serve the public folder containing html/js/css
- */
-app.get('/', (req, res) => {
-    res.send("Welcome to adshare!\n\nWe are a distributed marketing platform where your ad will get noticed. Blah blah blah...");
-});
+
+app.use(express.static('public'));
+
 
 /**
  * Handle a peer connecting via ws
