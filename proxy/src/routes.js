@@ -45,9 +45,7 @@ router.get('/ad',
         io.emit('get-ad');
 
         const timeoutAd = new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(() => res.sendFile(getDefaultAd()))
-            }, 2000);   // 2 sec default
+            setTimeout(resolve, 2000, () => res.sendFile(getDefaultAd()))
         });
 
         const peerAd = new Promise((resolve) => {
