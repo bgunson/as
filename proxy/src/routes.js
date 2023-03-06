@@ -44,18 +44,18 @@ router.get('/ad',
         // ask all peers for an ad
         io.emit('get-ad');
 
-        const timeoutAd = new Promise((resolve) => {
-            setTimeout(resolve, 2000, () => res.sendFile(getDefaultAd()))
+        const timeoutAd = new Promise((resolve, reject) => {
+            setTimeout(reject, 2000)
         });
 
-        const peerAd = new Promise((resolve) => {
+        const peerAd = new Promise((resolve, reject) => {
             peers.once('give-ad', (fName, stream) => {
                 // test file name from peer
                 const fType = isValidType(fName);
                 
                 // if fType is undefined (not valid image or asset) bad, else forward to client 
                 if (!fType) {
-                    resolve(() => res.sendFile(getDefaultAd()));  
+                    reject();  
                 } else {
                     resolve(() => {
                         res.contentType(fName);
@@ -66,7 +66,9 @@ router.get('/ad',
         }); 
 
         // timeout or peer response wins
-        Promise.race([timeoutAd, peerAd]).then(sendAd => sendAd());
+        Promise.race([timeoutAd, peerAd])
+            .then(sendAd => sendAd())
+            .catch(() => res.sendFile(getDefaultAd()));
     }
 );
 
