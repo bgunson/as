@@ -44,28 +44,31 @@ router.get('/ad',
         // ask all peers for an ad
         io.emit('get-ad');
 
-        // timeout default ad after 2 sec
-        let timeoutAd = setTimeout(() => {
-            res.sendFile(getDefaultAd());
-        }, 2000);
-
-        // wait for first peer to respond
-        peers.once('give-ad', (fName, stream) => {
-
-            clearTimeout(timeoutAd);
-
-            // test file name from peer
-            const fType = isValidType(fName);
-            
-            // if fType is undefined (not valid image or asset) bad, else forward to client 
-            if (!fType) {
-                // fallabck here or re-request
-                res.sendFile(getDefaultAd());  
-            } else {
-                res.contentType(fName);
-                res.send(stream);
-            } 
+        const timeoutAd = new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(() => res.sendFile(getDefaultAd()))
+            }, 2000);   // 2 sec default
         });
+
+        const peerAd = new Promise((resolve) => {
+            peers.once('give-ad', (fName, stream) => {
+                // test file name from peer
+                const fType = isValidType(fName);
+                
+                // if fType is undefined (not valid image or asset) bad, else forward to client 
+                if (!fType) {
+                    resolve(() => res.sendFile(getDefaultAd()));  
+                } else {
+                    resolve(() => {
+                        res.contentType(fName);
+                        res.send(stream);
+                    })
+                } 
+            });
+        }); 
+
+        // timeout or peer response wins
+        Promise.race([timeoutAd, peerAd]).then(sendAd => sendAd());
     }
 );
 
