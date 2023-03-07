@@ -5,7 +5,7 @@ const path = require('path');
 const registerHandlers = require('./handlers');
 
 const port = process.env.PORT || 3000;
-const serverURL = process.env.NODE_ENV === 'production' ? `https://5b9a-68-147-173-125.ngrok.io/` : `http://localhost:${port}`; // default to dev 
+const serverURL = process.env.NODE_ENV === 'production' ? `https://amazing-limiter-378022.uw.r.appspot.com` : `http://localhost:${port}`; // default to dev 
 
 /**
  * Utility function to set up socket.io-client for connecting to proxy
