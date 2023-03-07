@@ -1,6 +1,8 @@
 const path = require('path');
 const fs = require('fs');
 const { Socket } = require('socket.io-client');
+const chalk = require('chalk');
+var log = require('fancy-log');
 
 const adDir = path.join(process.cwd(), '/ads'); 
 

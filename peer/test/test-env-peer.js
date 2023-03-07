@@ -27,6 +27,7 @@ ifNodeEnvTest('Test_envs', (done) => {
     assert(process.env.NODE_ENV === 'test');
     assert(process.env.ENVVAR === 'exists');
     assert(process.env.ENV_PATH === './.env-cmdrc');
+    assert(process.env.PEER_PORT === '69696');
     log(chalk.blueBright('All asserts pass!'));
     
     // Finish running basic env var tests

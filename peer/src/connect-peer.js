@@ -1,10 +1,12 @@
 const { io } = require("socket.io-client");
 const fs = require('fs');
 const path = require('path');
+const chalk = require('chalk');
+var log = require('fancy-log');
 
 const registerHandlers = require('./handlers');
 
-const port = process.env.PORT || 3000;
+const port = process.env.SERVER_PORT || 3000;
 const serverURL = process.env.SERVER_URL || `http://localhost:${port}`; // default to dev i.e. localhost 
 const adDir = path.join(process.cwd(), '/ads'); 
 
@@ -18,9 +20,9 @@ module.exports = () => {
     let peers;  // other peers
     
     if (process.env.NODE_ENV === 'production'){
-        console.log(`Peer running in prod. mode.\tConnecting to: ${serverURL}`);
+        log.info(chalk(`Peer running in prod. mode.\tConnecting to:`) + chalk.bold.bgYellowBright(` ${serverURL} `));
     } else {
-        console.log(`Peer running in dev. mode.\tConnecting to: ${serverURL}`);
+        log.info(chalk(`Peer running in dev. mode.\tConnecting to:`) + chalk.bold.bgGreenBright(` ${serverURL} `));
     }
 
     const socket = io(serverURL);
@@ -31,8 +33,8 @@ module.exports = () => {
     socket.on("error", (err) => console.log(err));
 
     socket.on("connect", () => {
-        console.log(`Proxy connection established.`);
-        console.log(`Instance peer ID is: ${socket.id}\n`);
+        log.info(chalk.bgGreenBright(`Proxy connection established.`));
+        log.info(`Instance peer ID is: ` + chalk.bgMagentaBright.bold(`${socket.id}\n`));
         socket.emit("get-peer-list");
     });
 
