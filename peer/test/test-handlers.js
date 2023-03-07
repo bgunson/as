@@ -1,9 +1,11 @@
 const { assert } = require("chai");
 const registerHandlers = require("../src/handlers");
 const fs = require('fs');
+const path = require('path');
 
 const { io } = require('socket.io-client');
-const { it } = require("node:test");
+
+const adDir = path.join(process.cwd(), '/ads'); // ad dir
 
 describe('handlers', () => {
 
@@ -27,7 +29,7 @@ describe('handlers', () => {
     it('#checkNumOfValidAd should work', () => {
         let valid = [];
         handlers.checkNumOfValidAd(valid);
-        assert.equal(valid.length, 1);
+        assert.equal(valid.length, fs.readdirSync(adDir).length);
     });
 
     it('#getAd() should return a valid ad path', () => {
