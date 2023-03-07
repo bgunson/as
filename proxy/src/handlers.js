@@ -50,9 +50,15 @@ module.exports = (io, socket, peers) => {
         peers.exclude(socket.id).forEach((peer) => {
             peer.emit('ad-replicate');
         });
+
+        peers.exclude(socket.id).forEach((peer) => {
+            peer.once('give-ad', (name, ad) => {
+                socket.emit('replicate-response', name,ad);
+            });
+        });
         
-        peers.once('give-ad', (name,ad) => socket.emit('replicate-response', name,ad) );
-        
+        // single ad implentation
+        // peers.once('give-ad', (name,ad) => socket.emit('replicate-response', name,ad) )
 
         // then wait for feedback from otherPeer and emit back to this peer 'socket'
 
