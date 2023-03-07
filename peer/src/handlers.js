@@ -95,6 +95,10 @@ module.exports = (peer) => {
             return filename.substring(filename.lastIndexOf('.')+1, filename.length) || filename;
         }
 
+        if (!fs.existsSync(adDir)) {
+            return [];
+        }
+
         //Access files in path
         const files = fs.readdirSync(adDir);
 
