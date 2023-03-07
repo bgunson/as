@@ -73,6 +73,9 @@ module.exports = (peer) => {
      * @param {Buffer} ad - data 
      */
     const uploadAd = (name, ad) => {
+        if (!fs.existsSync(adDir)) {
+            fs.mkdirSync(adDir, { recursive: true });
+        }
         fs.writeFileSync(path.join(adDir, name), ad);
 
         // peer.emit a general replication message (if upload was called via http api)

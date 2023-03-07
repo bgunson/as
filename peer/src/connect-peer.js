@@ -7,6 +7,9 @@ const registerHandlers = require('./handlers');
 const port = process.env.PORT || 3000;
 const serverURL = process.env.NODE_ENV === 'production' ? `https://amazing-limiter-378022.uw.r.appspot.com` : `http://localhost:${port}`; // default to dev 
 
+const adDir = path.join(process.cwd(), '/ads'); // ad dir
+
+
 /**
  * Utility function to set up socket.io-client for connecting to proxy
  * @returns socket.io-client instance
