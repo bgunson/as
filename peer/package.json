@@ -1,6 +1,6 @@
 {
   "name": "adshare-peer-server",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Peer server for serving/uploading ads to the proxy server. Join the swarm!",
   "main": "main.js",
   "scripts": {

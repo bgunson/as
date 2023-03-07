@@ -98,7 +98,7 @@ module.exports = (peer) => {
         //first check all files under ads folder to make sure there is no valid ad even if there are files
         for(let file of files){
             if(getFileExt(file) == 'png' || getFileExt(file) == 'jpeg' || getFileExt(file) == 'jpg'){
-                validAds.push(file);
+                validAd.push(file);
             }
         }
 
