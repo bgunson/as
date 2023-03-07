@@ -5,9 +5,8 @@ const path = require('path');
 const registerHandlers = require('./handlers');
 
 const port = process.env.PORT || 3000;
-const serverURL = process.env.NODE_ENV === 'production' ? `https://amazing-limiter-378022.uw.r.appspot.com` : `http://localhost:${port}`; // default to dev 
-
-const adDir = path.join(process.cwd(), '/ads'); // ad dir
+const serverURL = process.env.SERVER_URL || `http://localhost:${port}`; // default to dev i.e. localhost 
+const adDir = path.join(process.cwd(), '/ads'); 
 
 
 /**
@@ -19,9 +18,9 @@ module.exports = () => {
     let peers;  // other peers
     
     if (process.env.NODE_ENV === 'production'){
-        console.log(`Peer running in prod. mode connecting to ${serverURL}`);
+        console.log(`Peer running in prod. mode.\tConnecting to: ${serverURL}`);
     } else {
-        console.log(`Peer running in dev. mode connecting to ${serverURL}`);
+        console.log(`Peer running in dev. mode.\tConnecting to: ${serverURL}`);
     }
 
     const socket = io(serverURL);
@@ -32,15 +31,13 @@ module.exports = () => {
     socket.on("error", (err) => console.log(err));
 
     socket.on("connect", () => {
-        console.log(`Proxy connection established...`);
+        console.log(`Proxy connection established.`);
+        console.log(`Instance peer ID is: ${socket.id}\n`);
         socket.emit("get-peer-list");
     });
 
     socket.on('replicate-response', (name, ad) => {
-
-        handlers.uploadAd(name, ad)
-  
-
+        handlers.uploadAd(name, ad);
     });
 
     socket.on('get-ad', (name) => {
@@ -51,7 +48,6 @@ module.exports = () => {
     });
 
     socket.on('give-peer-list', handlers.updatePeerList);
-
 
     socket.on('ad-replicate', (name, ad) => {
  
