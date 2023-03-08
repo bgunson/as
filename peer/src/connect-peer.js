@@ -25,7 +25,7 @@ const NUM_RETRIES = process.env.NUM_RETRIES || 3;
 
 class Server {
     constructor() {
-        this._index = -1;   // first call to next() makes 0
+        this._index = 0; 
         this._backups = [serverURL, backup_serverURL1, backup_serverURL2].filter(b => b !== undefined);
     }
 
@@ -53,7 +53,7 @@ module.exports = () => {
         // see other options here: https://socket.io/docs/v4/client-options/
     });
 
-    console.log(`Connecting peer to ${server.addr}`)
+    console.log(`Connecting peer to ${socket.io.uri}`)
 
 
     // register handlers with the peer socket
@@ -63,8 +63,9 @@ module.exports = () => {
         console.log(`ERROR connecting to proxy: ${err.message}`);
     });
 
-    socket.io.on("reconnect_failed", (err) => {
+    socket.io.on("reconnect_failed", () => {
         console.log("max reconnects");
+        socket.close();
         socket.io.uri = server.next();
         console.log(`Swapping server urls to ${server.addr}`)
         socket.connect();
