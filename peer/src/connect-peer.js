@@ -1,15 +1,17 @@
 const { io } = require("socket.io-client");
 const fs = require('fs');
 const path = require('path');
+
 const chalk = require('chalk');
 var log = require('fancy-log');
+
+require('dotenv').config();
 
 const registerHandlers = require('./handlers');
 
 const port = process.env.SERVER_PORT || 3000;
 const serverURL = process.env.SERVER_URL || `http://localhost:${port}`; // default to dev i.e. localhost 
 const adDir = path.join(process.cwd(), '/ads'); 
-
 
 /**
  * Utility function to set up socket.io-client for connecting to proxy

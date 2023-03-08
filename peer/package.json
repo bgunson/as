@@ -3,6 +3,7 @@
   "version": "0.2.2",
   "description": "Peer server for serving/uploading ads to the proxy server. Join the swarm!",
   "main": "main.js",
+  "type": "commonjs",
   "scripts": {
     "pretest": "echo \" \t---Preparing tests...---\"",
     "start:test": "mocha",
@@ -18,9 +19,11 @@
   "license": "ISC",
   "dependencies": {
     "chai": "^4.3.7",
+    "chalk": "4.1.2",
     "cross-env": "^7.0.3",
     "dotenv": "latest",
     "dotenv-defaults": "^5.0.2",
+    "dotenv-expand": "^10.0.0",
     "env-cmd": "^10.1.0",
     "envinfo": "^7.8.1",
     "express": "latest",

@@ -25,5 +25,6 @@ const router = routes(handlers);
 app.use(router);
 
 const server = app.listen(port, () => { 
-    log.info(chalk.cyanBright(`Peer frontend & api is being served at: `) + chalk.bold.bgBlueBright(` http://localhost:${server.address().port} `));
+    log(chalk("Peer port is: ") + chalk.bold.italic.bgBlue(`${port}`));
+    log.info(chalk.bold.cyanBright(`Peer frontend & api is being served at: `) + chalk.bold.bgBlueBright(` http://localhost:${server.address().port} `));
 });
