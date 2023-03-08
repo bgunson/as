@@ -1,6 +1,6 @@
 {
   "name": "adshare-proxy",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Proxy server.",
   "main": "main.js",
   "scripts": {
@@ -16,6 +16,9 @@
   "keywords": [],
   "author": "Bennett Gunson",
   "license": "ISC",
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "cross-env": "^7.0.3",
     "dotenv": "latest",
