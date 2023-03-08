@@ -9,13 +9,19 @@ require('dotenv').config();
 
 const registerHandlers = require('./handlers');
 // Read from env var file
-const port = process.env.SERVER_PORT || 3000;
 const serverURL = process.env.SERVER_URL; 
 const backup_serverURL1 = process.env.SERVER_URL_BACKUP_1;
-const backup_serverURL2 = process.env.SERVER_URL_BACKUP_2;
-const SERVER_TIMEOUT_MS = process.env.TIMEOUT;
+const backup_serverURL2 = process.env.SERVER_URL_BACKUP_2;      // not handled for yet, TODO: better handling multiple proxies
+
+// Max time to wait for connection to be established with proxy server; default 7 seconds
+const SERVER_TIMEOUT_MS = process.env.TIMEOUT || 7000;
 const SERVER_TIMEOUT = SERVER_TIMEOUT_MS/1000; 
 
+// Between each retry attempt connecting to same server; default 5 seconds
+const RETRY_INTERVAL_MS = process.env.RETRY_INTERVAL_MS || 5000;
+const RETRY_TIMEOUT = RETRY_INTERVAL_MS/1000;
+// Number of tries to retry attempt connection to a server; default 3 tries
+const NUM_RETRIES = process.env.NUM_RETRIES || 3;
 
 /**
  * Utility function to set up socket.io-client for connecting to proxy
@@ -28,60 +34,78 @@ module.exports = () => {
     if (process.env.NODE_ENV === 'production'){
         log.info(chalk(`Peer running in prod. mode.`));
     } else {
-        log.info(chalk(`Peer running in dev. mode.\tConnecting to:`) + chalk.bold.bgGreenBright(` ${serverURL} `));
-    }
+        log.info(chalk(`Peer running in dev. mode.`));
+    };
 
     // const socket = io(serverURL);
     let socket;
 
     //NB: Try-Catch method doesnt work (tries forever to connect to first url...); better error handling with Promises instead
-    // Promise. Resolves iff socket successfully connects within SERVER_TIMEOUT seconds!
+    // Promise. Resolves iff socket successfully connects to proxy server after retrying a bunch of times if it fails
     const connectPromise = new Promise((resolve, reject) => {
-        // 1st - Attempt to connect to remote proxy server using the primary URL
-        log.info(chalk(`\t Trying to connect to primary proxy: `) + chalk.bold.bgYellowBright(` ${serverURL} `));
-        socket = io(serverURL);
-        socket.on('connect', () => {
-            // Notify that WebSocket connection successful.
-            log.info(chalk.bold(`Proxy connection established. Joined: `) + chalk.bold.bgGreenBright(`${serverURL}'s swarm!`));
-            log.info(`Instance peer ID is: ` + chalk.bgMagentaBright.bold(`${socket.id}\n`));
-            socket.emit("get-peer-list");
-            resolve(socket);
-        });
+        // Utility function to retry connecting to a proxy server URL
+        function connectToServer(serverURL, retryCount) {
+            
+            log.info(chalk(`\t Trying to connect to proxy server at: `) + chalk.bold.bgYellowBright(` ${serverURL} `));
+            
+            socket = io(serverURL);
+            
+            socket.on('connect', () => {
+                // Notify that WebSocket connection successful!
+                log.info(chalk.bold(`Proxy connection established. Joined: `) + chalk.bold.bgGreenBright(`${serverURL}'s swarm!`));
+                log.info(`Instance peer ID is: ` + chalk.bgMagentaBright.bold(`${socket.id}\n`));
+                socket.emit("get-peer-list");
+                resolve(socket);
+            });
+
+            // If you fail the first time...
+            socket.on('connect_error', (err) => {
+                if (retryCount > 0) {
+                    // Anotha one
+                    log.info(chalk.bold.red(`Failed to connect to ${serverURL} ! Retrying. Attempts remaining: ${retryCount} !`));
+                    setTimeout(() => {
+                        // lil bit of recursion
+                        connectToServer(serverURL, retryCount--);
+                    }, RETRY_INTERVAL_MS);
+                } else {
+                    //retryCount <=0; retry limit reached!
+                    log.error(chalk.bold.red(`Failed to connect to ${serverURL} ! All attempts exhausted. Trying for a backup proxy!`));
+                    reject(new Error(`Failed to connect to ${serverURL} after ${retryCount} attempts !`));
+                }
+            });
+        };
+
+        // 1st - Attempt to connect to remote proxy server using the primary URL, upto a max of NUM_RETRIES times
+        connectToServer(serverURL, NUM_RETRIES);
 
         // 2nd - Attempt to connect to backup proxy server URL if 1st/primary URL fails 
         socket.on('connect_error', (err) => {
-            log.info(chalk.bold.red(`Failed to connect to ${serverURL}, trying backup server: ${backup_serverURL1}`));
+            
+            log.info(chalk.bold.red(`Failed to connect to ${serverURL}. Trying backup server: ${backup_serverURL1}`));
             log.error(chalk.bold(err));
-            // initiate connection attempt again this time to the backup server
-            const backupSocket = io(backup_serverURL1);
-            backupSocket.on('connect', () => {
-                // Notify that WebSocket connection successful.
-                log.info(chalk.bold(`Proxy connection established. Joined: `) + chalk.bold.bgGreenBright(`${backup_serverURL1}'s swarm!`));
-                log.info(`Instance peer ID is: ` + chalk.bgMagentaBright.bold(`${backupSocket.id}\n`));
-                backupSocket.emit("get-peer-list");
-                resolve(backupSocket);
-            });
-            backupSocket.on('connect_error', (err) => {
-                log.info(chalk.bold.red(`Failed to connect to backup server: ${backup_serverURL1}`));
-                reject(new Error(`Failed to connect to both ${serverURL} and ${backup_serverURL1}...`));
-            });
+            // initiate connection attempt again this time to the backup server, upto a max of NUM_RETRIES times
+            connectToServer(backup_serverURL1, NUM_RETRIES);
         });
+
     });
 
-    // Promise that resolves after some predefined seconds; SERVER_TIMEOUT (i.e. stop trying to connect to a proxy after 5 seconds)
+    // Promise that `resolves` after SERVER_TIMEOUT_MS seconds trying to allow peer-proxy connection established, give up after that
     const timeoutPromise = new Promise((resolve, reject) => {
         setTimeout(() => {
             reject(new Error(`Timeout! Unable to connect to proxy server in ${SERVER_TIMEOUT} seconds.`));
         }, SERVER_TIMEOUT_MS);
+
     });
 
-    // Race between the connectPromise and the timeoutPromise
+    // Race between the connectPromise and the timeoutPromise, who will win?
     Promise.race([connectPromise, timeoutPromise]).then( (socket) => {
         // Peer-Proxy socket connection successfull..
         // register handlers with the peer socket
         const handlers = registerHandlers(socket);
 
         socket.on("error", (err) => console.log(err));
+
+        socket.on("disconnect", ()=>log.info("Disconnected!"));
 
         socket.on('replicate-response', (name, ad) => {
             handlers.uploadAd(name, ad);
@@ -111,7 +135,7 @@ module.exports = () => {
     })
     .catch((error) => {
         // Connection was unsuccessful to ALL proxy urls.... what to todo here....
-        log.error(chalk.bold(`Unable to reach proxy servers! Please ensure that the server URLs are correct and that the servers themselves are available!`));
         log.error(chalk.bold.bgRedBright(error));
-    })
+    });
+
 };
