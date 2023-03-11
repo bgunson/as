@@ -23,6 +23,7 @@ const RETRY_TIMEOUT = RETRY_INTERVAL_MS/1000;
 // Number of tries to retry attempt connection to a server; default 3 tries
 const NUM_RETRIES = process.env.NUM_RETRIES || 3;
 
+//merge 29 w
 class ProxyReplica {
 
     /**
@@ -53,34 +54,35 @@ module.exports = () => {
     const proxyReplica = new ProxyReplica();    
 
     const socket = io(proxyReplica.next(), {
-        autoConnect: false,     // connect is called at bottom
-        reconnectionAttempts: 2     // num attempts to connect to a given replica
+
+        transports: ['websocket'],              //https://stackoverflow.com/a/69450518; WebSocket over HTTP long polling
+        autoConnect: false,                     // connect is called at bottom
+        reconnectionAttempts: NUM_RETRIES,      // num attempts to connect to a given replica (NUM_RETRIES)
+        reconnectionDelay: RETRY_INTERVAL_MS,
+        addTrailingSlash: false,
         // see other options here: https://socket.io/docs/v4/client-options/
-        
-        // TODO: idk if you want to load the env var timeouts, etc but the defaults provided by socket.io-client are reasonable and they have
-        // randomization implemented as well. 
+
     });
 
-    console.log(`Connecting peer to ${socket.io.uri}`)
-
+    log.info(chalk(`Connecting peer instance to proxy server at :`) + chalk.bold.bgBlueBright(`${socket.io.uri}`));
 
     // register handlers with the peer socket
     const handlers = registerHandlers(socket);
 
     socket.on("connect_error", (err) => {
-        console.log(`ERROR connecting to proxy: ${err.message}`);
+        log.error(chalk.bold.red(`ERROR! Connecting to proxy: ${err.message}`));
     });
 
     socket.io.on("reconnect_failed", () => {
-        console.log("max reconnects");
+        log.info(`Exhausted all ${NUM_RETRIES} reconnect attempts for ${socket.io.uri} !`);
         socket.close();
         socket.io.uri = proxyReplica.next();      // advance to next backup
-        console.log(`Swapping server urls to ${proxyReplica.addr}`)
+        log.info(chalk(`Trying to reach backup proxy server at : `) + chalk.bold.bgYellowBright(`${proxyReplica.addr}`));
         socket.connect();
     });
 
     socket.on("connect", () => {
-        console.log(`Proxy connection established...`);
+        log.info(chalk.bold.bgGreenBright(`Proxy connection established!`));
         socket.emit("get-peer-list");
     });
 
@@ -110,8 +112,8 @@ module.exports = () => {
         }
 
     });
-
     socket.connect();
+    
     return handlers;
 
 };
