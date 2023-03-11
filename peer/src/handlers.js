@@ -1,8 +1,10 @@
 const path = require('path');
 const fs = require('fs');
 const { Socket } = require('socket.io-client');
+const chalk = require('chalk');
+var log = require('fancy-log');
 
-const adDir = path.join(process.cwd(), '/ads'); // ad dir
+const adDir = path.join(process.cwd(), '/ads'); 
 
 /**
  * @param {Socket} peer - the peer socket.io-client instance
@@ -66,7 +68,6 @@ module.exports = (peer) => {
         });
     }
 
-
     /**
      * 
      * @param {string} name - name of file 
@@ -85,12 +86,13 @@ module.exports = (peer) => {
 
     }
 
-    const checkNumOfValidAd = (validAd) => {
-        /**
+    /**
          * extracts file extension from a given file name
          * @param {string} filename The name of the file 
          * @returns file extension of the input file
          */
+    const checkNumOfValidAd = (validAd) => {
+        
         const getFileExt = (filename) => {
             return filename.substring(filename.lastIndexOf('.')+1, filename.length) || filename;
         }
