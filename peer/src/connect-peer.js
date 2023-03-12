@@ -41,7 +41,8 @@ class ProxyReplicaDS {
         this._backups = [backup_serverURL1, serverURL, backup_serverURL2].filter(b => b !== undefined);
         // keep track of how times a `cycle` has been completed wherein each URL has been exhausted
         this._numCycles = 0;
-        this._maxCycles = permaLoop ? 1 : 99;         // Will keep indefinitely looping this many times
+        this._maxCycles = permaLoop ? maxLoopCount : 1;         // Idea is if it is headless, will loop indefinitely, if not, will only loop a certain number of times
+
     };
 
     // Return current node element
@@ -49,11 +50,12 @@ class ProxyReplicaDS {
         return this._backups[this._index];
     };
 
+    // NB: 1 cycle = each URL has been `visited`/`nexted` atleast once
     get cyclesSoFar(){
         return this._numCycles;
     };
 
-    // Return next node element IFF it is under the maximum number of loopings
+    // Return next node element IFF it is under the maximum number of cycles
     get next() {
         let current = this._backups[this._index];
         // update index
@@ -94,7 +96,7 @@ module.exports = () => {
         // see other options here:              // https://socket.io/docs/v4/client-options/
     });
 
-    log.info(chalk(`Connecting peer instance to proxy server at: `) + chalk.bold.bgCyanBright(` ${proxyReplica.addr} `));
+    log.info(chalk.bold.bgKeyword('yellowgreen')(`Connecting`) + chalk.bold(` peer instance to proxy server at: `) + chalk.bold.bgKeyword('mediumspringgreen')(` ${proxyReplica.addr} \n`));
 
     // register handlers with the peer socket
     const handlers = registerHandlers(socket);
@@ -108,16 +110,16 @@ module.exports = () => {
     
     socket.io.on("reconnect_attempt", (attempt) => {
         const temp = retryAttempts - attempt;
-        log.error(`Trying to reconnect to ${proxyReplica.addr} \t Attempt number: ${attempt}\t Attempts remaining: ${temp}`);
+        log.error(chalk.bold.bgKeyword('darkkhaki')(`Trying `) + ` to reconnect to ` + chalk.bold.bgKeyword('mediumspringgreen')(`${proxyReplica.addr}`) + chalk.bold.redBright(` \t Attempt number: ${attempt}\t Attempts remaining: ${temp}`));
     });
 
     socket.io.on("reconnect_error", (err)=>{
-        log.error(chalk.bgRedBright(`Failed`) + chalk.bold(` to reconnect to ${proxyReplica.addr}.`));
+        log.error(chalk.bgRedBright(`Failed `) + chalk.bold(` to reconnect to `) + chalk.bold.bgKeyword('mediumspringgreen')(`${proxyReplica.addr}.`));
     })
 
     socket.io.on("reconnect_failed", () => {
         // Unable to re-connect within reconnectionAttempts
-        log.info(`Exhausted all ${retryAttempts} reconnect attempts for ${proxyReplica.addr}.`);
+        log.info(chalk.bold.bgKeyword('orangered')(` Exhausted all ${retryAttempts} reconnect attempts `) + ` for ` + chalk.bold.bgKeyword('mediumspringgreen')(` ${proxyReplica.addr}.\n`));
 
         // Close the socket for this address
         socket.close();
@@ -127,19 +129,20 @@ module.exports = () => {
             
             // proxyReplica.next returns null IFF the maximum number of cycles has been exceeded
             if(socket.io.url === null){
-                log.info(`Exhausted all ${maxLoopCount} cycles trying to connect to all proxy URLs!`);
+                log.info(chalk.bold.bgKeyword('darkred')(`Exhausted all ${maxLoopCount} cycles trying to connect to all proxy URLs!`));
             }else{
-                log.info(`Swapping server URL to: ${proxyReplica.addr}`);
+                log.info(`Cycles completed so far: ${proxyReplica.cyclesSoFar}`);
+                const temp = maxLoopCount - proxyReplica.cyclesSoFar;
+                log.info(`Will continue cycling for ${temp} more times!`);
+                log.info(chalk.bold.bgKeyword('orange')(`Swapping `) + (` server URL to: `) + chalk.bold.bgKeyword('seagreen')(`${proxyReplica.addr}`));
                 socket.connect();
+                log.info(chalk.bold.bgKeyword('yellowgreen')(`Connecting`) + chalk.bold(` peer instance to proxy server at: `) + chalk.bold.bgKeyword('mediumspringgreen')(` ${proxyReplica.addr} `));
             };
-            if(permaLoop){
-                log.warn(`Will only loop once!`);
-            }
-            log.warn(`Cycles completed so far: ${proxyReplica.cyclesSoFar}`);
+            
     });
 
     socket.on("connect", () => {
-        log.info(chalk.bold(`Proxy connection established with :`) + chalk.bold.bgGreenBright(`${socket.io.uri}`));
+        log.info(chalk.bold(`\nProxy connection established with :`) + chalk.bold.bgGreenBright(`${socket.io.uri}`));
         log.info(chalk(`This instance's peer ID is: `) + chalk.bold.bgBlueBright(`${socket.id} `));
         socket.emit("get-peer-list");
     });
