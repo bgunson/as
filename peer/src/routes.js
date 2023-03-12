@@ -4,6 +4,8 @@
 
 const express = require('express');
 const router = express.Router();
+const chalk = require('chalk');
+var log = require('fancy-log');
 
 module.exports = (handlers) => {
 

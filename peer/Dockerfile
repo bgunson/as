@@ -13,7 +13,8 @@ RUN npm install --omit=dev
 COPY . .
 
 # Set the NODE_ENV environment variable to "production"
-ENV NODE_ENV=production
+# Redudant as .rc file is present already
+# ENV NODE_ENV=production
 
 # Start the application in production environment
 CMD ["npm", "start"]
