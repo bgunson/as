@@ -53,12 +53,12 @@ module.exports = () => {
     const proxyReplica = new ProxyReplica();    
 
     const socket = io(proxyReplica.next(), {
-        autoConnect: false,     // connect is called at bottom
-        reconnectionAttempts: 2     // num attempts to connect to a given replica
+        transports: ['websocket'],              //https://stackoverflow.com/a/69450518; WebSocket over HTTP long polling
+        autoConnect: false,                     // connect is called at bottom
+        reconnectionAttempts: NUM_RETRIES,      // num attempts to connect to a given replica (NUM_RETRIES)
+        reconnectionDelay: RETRY_INTERVAL_MS,   // delay between each reconnect attempt
+        timeout: SERVER_TIMEOUT_MS,             // For each connection attempt
         // see other options here: https://socket.io/docs/v4/client-options/
-        
-        // TODO: idk if you want to load the env var timeouts, etc but the defaults provided by socket.io-client are reasonable and they have
-        // randomization implemented as well. 
     });
 
     console.log(`Connecting peer to ${socket.io.uri}`)
