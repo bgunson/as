@@ -75,12 +75,12 @@ module.exports = () => {
         console.log("max reconnects");
         socket.close();
         socket.io.uri = proxyReplica.next();      // advance to next backup
-        console.log(`Swapping server urls to ${proxyReplica.addr}`)
+        console.log(`Swapping server urls to ${socket.io.uri}`)
         socket.connect();
     });
 
     socket.on("connect", () => {
-        console.log(`Proxy connection established...`);
+        console.log(`Proxy connection established... to ${socket.io.uri}`);
         socket.emit("get-peer-list");
     });
 
