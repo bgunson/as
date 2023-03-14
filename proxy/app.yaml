@@ -1,4 +1,7 @@
 #app.yaml for Google Cloud 
 
-runtime: nodejs16
+runtime: nodejs
+env: flex
 
+manual_scaling:
+  instances: 1

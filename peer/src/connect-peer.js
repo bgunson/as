@@ -8,13 +8,14 @@ var log = require('fancy-log');
 require('dotenv').config();
 
 const registerHandlers = require('./handlers');
+const { TIMEOUT } = require("dns");
 // Read from env var file
 const serverURL = process.env.SERVER_URL; 
 const backup_serverURL1 = process.env.SERVER_URL_BACKUP_1;
-const backup_serverURL2 = process.env.SERVER_URL_BACKUP_2;      // not handled for yet, TODO: better handling multiple proxies
+const backup_serverURL2 = process.env.SERVER_URL_BACKUP_2;      
 
 // Max time to wait for connection to be established with proxy server; default 7 seconds
-const SERVER_TIMEOUT_MS = process.env.TIMEOUT || 7000;
+const SERVER_TIMEOUT_MS = process.env.CONN_TIMEOUT || 7000;
 const SERVER_TIMEOUT = SERVER_TIMEOUT_MS/1000; 
 
 // Between each retry attempt connecting to same server; default 5 seconds
@@ -23,25 +24,41 @@ const RETRY_TIMEOUT = RETRY_INTERVAL_MS/1000;
 // Number of tries to retry attempt connection to a server; default 3 tries
 const NUM_RETRIES = process.env.NUM_RETRIES || 3;
 
-class ProxyReplica {
+//merge 29 w
+class ProxyReplicaQueue {
 
     /**
-     * Circular linked list for defined server URLs 
+     * Queue for defined server URLs 
      */
     constructor() {
-        this._index = 0; 
-        this._backups = [serverURL, backup_serverURL1, backup_serverURL2].filter(b => b !== undefined);
-    }
+        // Initialize
+        this._queue = [serverURL, backup_serverURL1, backup_serverURL2].filter(b => b !== undefined);
+      }
+    
+      enqueue(url) {
+        // Add url to queue (NOT USED!)
+        this._queue.push(url);
+      }
+    
+      dequeue() {
+        // Pop goes the weasel
+        return this._queue.shift();
+      }
+    
+      get size() {
+        return this._queue.length;
+      }
+    
+      // FiFo
+      get next() {
+        return this._queue[0];
+      }
+    
+      // Need this to prevent perma looping 
+      get isEmpty() {
+        return this._queue.length === 0;
+      }
 
-    get addr() {
-        return this._backups[this._index];
-    }
-
-    next() {
-        let current = this._backups[this._index];
-        this._index = ++this._index % this._backups.length;
-        return current;
-    }
 }
 
 /**
@@ -50,7 +67,7 @@ class ProxyReplica {
  */
 module.exports = () => {
 
-    const proxyReplica = new ProxyReplica();    
+    const proxyReplica = new ProxyReplicaQueue();    
 
     const socket = io(proxyReplica.next(), {
         transports: ['websocket'],              //https://stackoverflow.com/a/69450518; WebSocket over HTTP long polling
@@ -61,26 +78,44 @@ module.exports = () => {
         // see other options here: https://socket.io/docs/v4/client-options/
     });
 
-    console.log(`Connecting peer to ${socket.io.uri}`)
 
+    });
+
+    log.info(chalk(`Connecting peer instance to proxy server at: `) + chalk.bold.bgCyanBright(` ${socket.io.uri} `));
 
     // register handlers with the peer socket
     const handlers = registerHandlers(socket);
 
+    //https://socket.io/docs/v4/client-api/
+
     socket.on("connect_error", (err) => {
-        console.log(`ERROR connecting to proxy: ${err.message}`);
+        log.error(chalk.bold.red(`${err.message}`));
+        // Not sure how to use the queue here,
     });
+    
+    socket.io.on("reconnect_attempt", (attempt) => {
+        log.error(`Failed to reconnect to ${socket.io.uri} , this was the ${attempt} / ${NUM_RETRIES} reconnect try!`);
+      });
 
     socket.io.on("reconnect_failed", () => {
-        console.log("max reconnects");
+        // Unable to re-connect within reconnectionAttempts
+        log.info(`Exhausted all ${NUM_RETRIES} reconnect attempts for ${socket.io.uri} !`);
+        proxyReplica.dequeue();
+        // Close the socket for this address
         socket.close();
-        socket.io.uri = proxyReplica.next();      // advance to next backup
-        console.log(`Swapping server urls to ${proxyReplica.addr}`)
-        socket.connect();
+        // if queue is NOT empty, try next backup URL else... exit?
+        if (!proxyReplica.isEmpty){
+            socket.io.uri = proxyReplica.next;      // advance to next backup
+            log.info(chalk(`Not all hope is lost!\nTrying to reach backup proxy server at : `) + chalk.bold.bgYellowBright(`${socket.io.uri}`));
+            socket.connect();
+        }else{
+            // queue is empty = all server URLs have been tried atleast once, if want to keep it perma looping remove this if-else construct 
+            log.info(`Tried all backup URLs!`);
+        };
     });
 
     socket.on("connect", () => {
-        console.log(`Proxy connection established...`);
+        log.info(chalk.bold.bgGreenBright(`Proxy connection established!`));
         socket.emit("get-peer-list");
     });
 
@@ -110,8 +145,8 @@ module.exports = () => {
         }
 
     });
-
     socket.connect();
+    
     return handlers;
 
 };
