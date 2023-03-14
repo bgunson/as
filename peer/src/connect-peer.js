@@ -69,14 +69,15 @@ module.exports = () => {
 
     const proxyReplica = new ProxyReplicaQueue();    
 
-    const socket = io(proxyReplica.next, {
-
+    const socket = io(proxyReplica.next(), {
         transports: ['websocket'],              //https://stackoverflow.com/a/69450518; WebSocket over HTTP long polling
         autoConnect: false,                     // connect is called at bottom
         reconnectionAttempts: NUM_RETRIES,      // num attempts to connect to a given replica (NUM_RETRIES)
         reconnectionDelay: RETRY_INTERVAL_MS,   // delay between each reconnect attempt
         timeout: SERVER_TIMEOUT_MS,             // For each connection attempt
         // see other options here: https://socket.io/docs/v4/client-options/
+    });
+
 
     });
 
