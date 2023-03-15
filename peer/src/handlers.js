@@ -3,8 +3,8 @@ const fs = require('fs');
 const { Socket } = require('socket.io-client');
 const chalk = require('chalk');
 var log = require('fancy-log');
+const { adDir } = require('./defaults');
 
-const adDir = path.join(process.cwd(), process.env.AD_DIR || '/ads'); 
 
 /**
  * @param {Socket} peer - the peer socket.io-client instance

@@ -4,8 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { io } = require('socket.io-client');
-
-const adDir = path.join(process.cwd(), process.env.AD_DIR || '/ads'); // ad dir
+const { adDir } = require("../src/defaults");
 
 describe('handlers', () => {
 
