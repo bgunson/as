@@ -92,10 +92,6 @@ module.exports = (peer) => {
          * @returns file extension of the input file
          */
     const checkNumOfValidAd = (validAd) => {
-        
-        const getFileExt = (filename) => {
-            return filename.substring(filename.lastIndexOf('.')+1, filename.length) || filename;
-        }
 
         if (!fs.existsSync(adDir)) {
             return [];
@@ -106,7 +102,8 @@ module.exports = (peer) => {
 
         //first check all files under ads folder to make sure there is no valid ad even if there are files
         for(let file of files){
-            if(getFileExt(file) == 'png' || getFileExt(file) == 'jpeg' || getFileExt(file) == 'jpg'){
+            let extension = path.extname(file).toLowerCase();
+            if(extension == '.png' || extension == '.jpeg' || extension == '.jpg'){
                 validAd.push(file);
             }
         }
