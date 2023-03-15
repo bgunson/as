@@ -27,6 +27,8 @@ module.exports = (io, socket, peers) => {
      */
     const giveAd = (id, ad) => {
         peers.emit("give-ad", id, ad);
+        // when an ad is incoming to the proxy give it to all other peers who can decide if they want it or not
+        peers.exclude(socket.id).forEach((peer) => peer.emit('replicate-response', id, ad));
     }
 
     /**
@@ -43,30 +45,25 @@ module.exports = (io, socket, peers) => {
      * This peer wants to replicate an ad
      * @param {unknown} ad ?
      */
-    const requestReplicate = (socket) => {
-        // TODO: potential implmentation
+    const requestReplicate = () => {
         console.log(`${socket.id} requesting ad from peers`);
 
+        // ask all other peers for an replica ad
         peers.exclude(socket.id).forEach((peer) => {
             peer.emit('ad-replicate');
         });
 
+        // when those peers respond, give that ad back to the empty peer
         peers.exclude(socket.id).forEach((peer) => {
             peer.once('give-ad', (name, ad) => {
                 socket.emit('replicate-response', name,ad);
             });
         });
         
-        // single ad implentation
-        // peers.once('give-ad', (name,ad) => socket.emit('replicate-response', name,ad) )
-
-        // then wait for feedback from otherPeer and emit back to this peer 'socket'
-
-        // throw new Error("Not yet implemented.");
     }
 
     // register handlers w/ socket
-    socket.on('request-replicate', () => requestReplicate(socket));
+    socket.on('request-replicate', requestReplicate);
     socket.on('get-peer-list', getPeerList);
     socket.on('disconnect', onDisconnect);
     socket.on('give-ad', giveAd);
