@@ -5,7 +5,7 @@ const path = require('path');
 
 const { io } = require('socket.io-client');
 
-const adDir = path.join(process.cwd(), '/ads'); // ad dir
+const adDir = path.join(process.cwd(), process.env.AD_DIR || '/ads'); // ad dir
 
 describe('handlers', () => {
 
