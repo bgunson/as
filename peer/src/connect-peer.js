@@ -7,6 +7,7 @@ var log = require('fancy-log');
 require('dotenv').config();
 
 const registerHandlers = require('./handlers');
+const { adDir } = require("./defaults");
 // Read from env var file
 const serverURL = process.env.SERVER_URL; 
 const backup_serverURL1 = process.env.SERVER_URL_BACKUP_1;
