@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const { Socket } = require('socket.io-client');
 const chalk = require('chalk');
 var log = require('fancy-log');
@@ -27,7 +28,7 @@ module.exports = (peer) => {
     /**
      * Choose an ad randomly from peer with the assumption that peer has an ad and emits back to proxy
      * @param {string} name - optional name (with ext) of exact ad file wanted
-     * @returns well-formed path to the ad file on this peer, false if invalid ad
+     * @returns well-formed path to the ad file on this peer, null if invalid ad
      */
     const getAd = (name) => {
         validAds = [];
@@ -38,16 +39,15 @@ module.exports = (peer) => {
                 name = validAds[Math.floor(Math.random() * validAds.length)];
             }
 
-            var adPath = path.join(adDir, name);
+            return path.join(adDir, name);
 
             // if no validAd, send request to proxy to ask ad from other peers 
-        }else{
-            console.log("No valid ads available, will need to replicate")
-            //sends id to indicate which peer is requesting ad
-            peer.emit("request-replicate", peer.id);
+        } else {
+            console.log("No valid ads available, will wait for replication")
+            // //sends id to indicate which peer is requesting ad
+            // peer.emit("request-replicate");
+            return null;
         }
-
-        return adPath;
         
     }
 
@@ -72,14 +72,21 @@ module.exports = (peer) => {
      * 
      * @param {string} name - name of file 
      * @param {Buffer} ad - data 
+     * @returns - the name of the new ad (base64 digest of the hashed file using sha256)
      */
     const uploadAd = (name, ad) => {
         if (!fs.existsSync(adDir)) {
             fs.mkdirSync(adDir, { recursive: true });
         }
-        fs.writeFileSync(path.join(adDir, name), ad);
 
-        // peer.emit a general replication message (if upload was called via http api)
+        // hash the incoming file (buffer) and use its base64 digest as the name when writing to disk
+        const hashSum = crypto.createHash('sha256');
+        hashSum.update(ad);
+        const hashName = hashSum.digest('base64') + path.extname(name);
+
+        fs.writeFileSync(path.join(adDir, hashName), ad);
+        return hashName;
+        // TODO: maybe? peer.emit a general replication message (if upload was called via http api)
     }
 
     const deleteAd = () => {
