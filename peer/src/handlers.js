@@ -115,13 +115,23 @@ module.exports = (peer) => {
 
     }
 
+    const returnAdList = () => {
+        allAds = [];
+
+        allAds = fs.readdirSync(adDir);
+        
+        return allAds;
+
+    }
+
     return {
         getAd,
         giveAd,
         updatePeerList,
         uploadAd,
         deleteAd,
-        checkNumOfValidAd 
+        checkNumOfValidAd,
+        returnAdList
     }
 
 }
