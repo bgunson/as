@@ -82,9 +82,14 @@ module.exports = (peer) => {
         // hash the incoming file (buffer) and use its base64 digest as the name when writing to disk
         const hashSum = crypto.createHash('sha256');
         hashSum.update(ad);
-        const hashName = hashSum.digest('base64') + path.extname(name);
+        const hashName = hashSum.digest('base64url') + path.extname(name);
 
-        fs.writeFileSync(path.join(adDir, hashName), ad);
+        fs.writeFile(path.join(adDir, hashName), ad, (err) => {
+            if (err) {
+                console.log(err.message);
+            }
+        });
+
         return hashName;
         // TODO: maybe? peer.emit a general replication message (if upload was called via http api)
     }
