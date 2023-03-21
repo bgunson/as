@@ -1,13 +1,13 @@
 const { io } = require("socket.io-client");
 const fs = require('fs');
 const path = require('path');
-const adDir = path.join(process.cwd(), '/ads'); 
 const chalk = require('chalk');
 var log = require('fancy-log');
 
 require('dotenv').config();
 
 const registerHandlers = require('./handlers');
+const { adDir } = require("./defaults");
 // Read from env var file
 const serverURL = process.env.SERVER_URL; 
 const backup_serverURL1 = process.env.SERVER_URL_BACKUP_1;
@@ -31,10 +31,6 @@ class ProxyReplica {
     constructor() {
         this._index = 0; 
         this._backups = [serverURL, backup_serverURL1, backup_serverURL2].filter(b => b !== undefined);
-    }
-
-    get addr() {
-        return this._backups[this._index];
     }
 
     next() {
@@ -84,9 +80,7 @@ module.exports = () => {
         socket.emit("get-peer-list");
     });
 
-    socket.on('replicate-response', (name, ad) => {
-        handlers.uploadAd(name, ad)
-    });
+    socket.on('replicate', handlers.uploadAd);
 
     socket.on('get-ad', (name) => {
         const ad = handlers.getAd(name);
@@ -97,19 +91,26 @@ module.exports = () => {
 
     socket.on('give-peer-list', handlers.updatePeerList);
 
-
-    socket.on('ad-replicate', (name, ad) => {
- 
-        validAd = [];
-        handlers.checkNumOfValidAd(validAd);
-        if(validAd.length > 0){
-            name = validAds[Math.floor(Math.random() * validAds.length)];
-            var adPath = path.join(adDir, name);
-            //sends back to proxy
-            handlers.giveAd(adPath);
-        }
-
+    socket.on('want-ad', (id, cb) => {
+        // do we need this ad?
+        cb(!fs.existsSync(handlers.getAd(id)));
     });
+
+    // socket.on('ad-replicate', 
+    /**
+     * @deprecated since adding passive https://github.com/bgunson/as/pull/35
+     */
+    //(name, ad) => {
+ 
+    //     validAd = [];
+    //     handlers.checkNumOfValidAd(validAd);
+    //     if(validAd.length > 0){
+    //         name = validAds[Math.floor(Math.random() * validAds.length)];
+    //         var adPath = path.join(adDir, name);
+    //         //sends back to proxy
+    //         handlers.giveAd(adPath);
+    //     }
+    // });
 
     socket.connect();
     return handlers;

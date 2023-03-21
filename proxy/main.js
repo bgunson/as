@@ -3,7 +3,9 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const io = new Server(server, {
+  maxHttpBufferSize: 3e6  // 3MB (ad file) max message sixe
+});
 
 const routes = require('./src/routes');
 

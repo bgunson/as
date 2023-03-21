@@ -4,12 +4,11 @@ const fs = require('fs');
 const path = require('path');
 
 const { io } = require('socket.io-client');
-
-const adDir = path.join(process.cwd(), '/ads'); // ad dir
+const { adDir } = require("../src/defaults");
 
 describe('handlers', () => {
 
-    let peer, handlers;
+    let peer, handlers, testAd;
 
     before(() => {
         peer = io();
@@ -21,7 +20,7 @@ describe('handlers', () => {
     });
 
     it('uploadAd_SingleFakeAd', () => {
-        handlers.uploadAd("fake.png", Buffer.from("data"));
+        testAd = handlers.uploadAd("fake.png", Buffer.from("data"));
         const ad = handlers.getAd();
         assert.equal(fs.existsSync(ad), true);
     });
@@ -33,7 +32,7 @@ describe('handlers', () => {
     });
 
     it('getAd_SingleFakeAd_validAdPath', () => {
-        const ad = handlers.getAd("fake.png");
+        const ad = handlers.getAd(testAd);
         assert.equal(fs.existsSync(ad), true);
     });
 

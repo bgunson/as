@@ -60,7 +60,7 @@ router.get('/ad',
                     resolve(() => {
                         res.contentType(fName);
                         res.send(stream);
-                    })
+                    });
                 } 
             });
         }); 
