@@ -1,6 +1,9 @@
 const { Socket } = require("socket.io");
 const Peers = require("./peers");
 
+const fs = require('fs');
+let wstream = fs.createWriteStream("../Logs/activityLog.txt");
+
 /**
  * socket.io event handlers
  * @param {Socket} io the main server socket
@@ -17,7 +20,13 @@ module.exports = (io, socket, peers) => {
      */
     const getPeerList = () => {
         // emitting back to all peers when one requests
-        io.emit("give-peer-list", peers.getPeerList());
+        const peerListStr = peers.getPeerList();
+        io.emit("give-peer-list", peerListStr);
+
+        //write log
+        const message = `${getTimeStamp()} Peer list update: ${peerListStr}`
+        writeLog(message);
+
     }
 
     /**
@@ -28,12 +37,19 @@ module.exports = (io, socket, peers) => {
     const giveAd = (id, ad) => {
         peers.emit("give-ad", id, ad);
 
+        //write log
+        const message = `${getTimeStamp()}, ${peer.id} served ${ad}`;
+        writeLog(message)
+
         // when an ad is incoming to the proxy ask all others if they need it to be replicated
         peers.exclude(socket.id).forEach((peer) => {
             peer.emit('want-ad', id, (ans) => {
                 if (ans === true) {
                     console.log(`Peer: ${peer.id} needs ad '${id}'`);
                     peer.emit('replicate', id, ad);
+
+                    message = `${getTimeStamp()}, replicating ad for ${peer.id}, ${ad} given`;
+                    writeLog(message);
                 }
             });
         });
@@ -46,7 +62,12 @@ module.exports = (io, socket, peers) => {
         console.log(`${socket.id} disconnected`);
         // this peer disconected, remove from local cache so they wont be picked next time a client hails an ad
         peers.removePeer(socket);   // remove self
-        io.emit("give-peer-list", peers.getPeerList())
+        const peerListStr = peers.getPeerList();
+        io.emit("give-peer-list", peerListStr);
+        
+        //write in log
+        const message = `${getTimeStamp()} Peer list update: ${peerListStr}`
+        writeLog(message);
     }
 
     /**
@@ -58,6 +79,20 @@ module.exports = (io, socket, peers) => {
         console.log(`${socket.id} requesting ad from peers`);
         // ask all other peers for an ad
         socket.broadcast.emit('ad-replicate');    
+    }
+
+    const getTimeStamp = () => {
+        const currentDate = new Date();
+        const timestamp = currentDate.getTime();
+        return timestamp;
+    }
+
+    const writeLog = (data) => {
+        wstream.write(data, (err) =>{
+            if(err){
+                console.log(err.message);
+            }
+        })
     }
 
     // register handlers w/ socket
