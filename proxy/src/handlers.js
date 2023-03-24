@@ -1,8 +1,6 @@
 const { Socket } = require("socket.io");
 const Peers = require("./peers");
 
-const fs = require('fs');
-let wstream = fs.createWriteStream("../Logs/activityLog.txt");
 
 /**
  * socket.io event handlers
@@ -23,10 +21,6 @@ module.exports = (io, socket, peers) => {
         const peerListStr = peers.getPeerList();
         io.emit("give-peer-list", peerListStr);
 
-        //write log
-        const message = `${getTimeStamp()} Peer list update: ${peerListStr}`
-        writeLog(message);
-
     }
 
     /**
@@ -35,21 +29,13 @@ module.exports = (io, socket, peers) => {
      * @param {Buffer} ad - ad bytes
      */
     const giveAd = (id, ad) => {
-        peers.emit("give-ad", id, ad);
-
-        //write log
-        const message = `${getTimeStamp()}, ${peer.id} served ${ad}`;
-        writeLog(message)
-
+        peers.emit("give-ad", socket, id, ad);
         // when an ad is incoming to the proxy ask all others if they need it to be replicated
         peers.exclude(socket.id).forEach((peer) => {
             peer.emit('want-ad', id, (ans) => {
                 if (ans === true) {
                     console.log(`Peer: ${peer.id} needs ad '${id}'`);
                     peer.emit('replicate', id, ad);
-
-                    message = `${getTimeStamp()}, replicating ad for ${peer.id}, ${ad} given`;
-                    writeLog(message);
                 }
             });
         });
@@ -64,10 +50,6 @@ module.exports = (io, socket, peers) => {
         peers.removePeer(socket);   // remove self
         const peerListStr = peers.getPeerList();
         io.emit("give-peer-list", peerListStr);
-        
-        //write in log
-        const message = `${getTimeStamp()} Peer list update: ${peerListStr}`
-        writeLog(message);
     }
 
     /**
@@ -81,19 +63,6 @@ module.exports = (io, socket, peers) => {
         socket.broadcast.emit('ad-replicate');    
     }
 
-    const getTimeStamp = () => {
-        const currentDate = new Date();
-        const timestamp = currentDate.getTime();
-        return timestamp;
-    }
-
-    const writeLog = (data) => {
-        wstream.write(data, (err) =>{
-            if(err){
-                console.log(err.message);
-            }
-        })
-    }
 
     // register handlers w/ socket
     // socket.on('request-replicate', requestReplicate);   

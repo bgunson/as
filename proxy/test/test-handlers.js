@@ -40,7 +40,7 @@ describe("handler", () => {
     });
 
     it("#giveAd() should work", (done) => {
-        peers.once('give-ad', (name, _) => {
+        peers.once('give-ad', (peer, name, _) => {7
             assert.equal(name, "testad");
             done();
         });

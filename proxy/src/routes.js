@@ -3,10 +3,12 @@
  */
 
 const express = require('express');
+const { writeLog } = require('./activity-logger');
 const router = express.Router();
 
 const { getDefaultAd } = require('./defaults');
 const { isValidType } = require('./validators');
+
 
 router.get('/version', 
     /**
@@ -45,11 +47,11 @@ router.get('/ad',
         io.emit('get-ad');
 
         const timeoutAd = new Promise((resolve, reject) => {
-            setTimeout(reject, 2000)
+            setTimeout(reject, 2000);
         });
 
         const peerAd = new Promise((resolve, reject) => {
-            peers.once('give-ad', (fName, stream) => {
+            peers.once('give-ad', (peer, fName, stream) => {
                 // test file name from peer
                 const fType = isValidType(fName);
                 
@@ -57,6 +59,11 @@ router.get('/ad',
                 if (!fType) {
                     reject();  
                 } else {
+
+                    const message = `${Date.now()} peer @ ${peer.handshake.address} served '${fName}'\n`;
+                    writeLog(message);
+                    io.emit('activity-log-msg', message);
+
                     resolve(() => {
                         res.contentType(fName);
                         res.send(stream);
