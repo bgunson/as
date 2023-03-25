@@ -20,6 +20,7 @@
     "node": "16.x"
   },
   "dependencies": {
+    "chalk": "4.1.2",
     "cross-env": "^7.0.3",
     "dotenv": "latest",
     "dotenv-defaults": "^5.0.2",
@@ -32,7 +33,6 @@
   },
   "devDependencies": {
     "chai": "^4.3.7",
-    "concurrently": "^7.6.0",
     "mocha": "^10.2.0",
     "nodemon": "^2.0.20"
   }
