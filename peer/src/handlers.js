@@ -16,11 +16,13 @@ module.exports = (peer) => {
     let peers;
 
     /**
+     * Receive list of peers in swarm from the proxy server and display the list to console
      * @param {string[]} list - list of lates peer ids (including our own) 
+     * @returns list of peers currently connected to proxy server's swarm
      */
     const updatePeerList = (list) => {
         peers = list;
-        console.log(`Peer list update:`);
+        log.info(`\tUpdated list of peers in swarm currently:`);
         console.log(peers);
         return peers;
     }
@@ -40,15 +42,13 @@ module.exports = (peer) => {
             }
 
             return path.join(adDir, name);
-
             // if no validAd, send request to proxy to ask ad from other peers 
         } else {
-            console.log("No valid ads available, will wait for replication")
+            log.info("No valid ads available, will wait for replication")
             // //sends id to indicate which peer is requesting ad
             // peer.emit("request-replicate");
             return null;
         }
-        
     }
 
     /**
@@ -58,12 +58,10 @@ module.exports = (peer) => {
     const giveAd = (ad) => {
         fs.readFile(ad, (err, data) => {
             if (!err) {
-                console.log("Transmitting ad: " + ad + " to proxy...");
+                log.info("Transmitting ad: " + ad + " to proxy server!");
                 peer.emit("give-ad", path.basename(ad), data);
             } else {
-                //NB: With nodemon running both proxy and server instances, error transmitting puts client page to perma-reloading with no ad rip
-                //Fix^ and have to also get client to refresh and get proper ad 
-                console.log("Error transmitting ad to proxy! Check ad config settings!");
+                log.error("Error transmitting ad to proxy! Check ad config settings!");
             }
         });
     }
@@ -75,34 +73,55 @@ module.exports = (peer) => {
      * @returns - the name of the new ad (base64 digest of the hashed file using sha256)
      */
     const uploadAd = (name, ad) => {
+
+        //If ad containing directory, name defined earlier, does not exist in system, create it.
         if (!fs.existsSync(adDir)) {
             fs.mkdirSync(adDir, { recursive: true });
-        }
+        };
 
-        // hash the incoming file (buffer) and use its base64 digest as the name when writing to disk
+        // Hash the incoming file (buffer) and use its base64 digest as the name when writing to disk
         const hashSum = crypto.createHash('sha256');
         hashSum.update(ad);
         const hashName = hashSum.digest('base64url') + path.extname(name);
 
         fs.writeFile(path.join(adDir, hashName), ad, (err) => {
             if (err) {
-                console.log(err.message);
-            }
+                log.error(chalk.bold(err.message));
+            };
         });
-
+        // peer.emit a general replication message (if upload was called via http api) to other peers
+        // Issue#26 (reuse giveAd logic for replicationg)
+        peer.emit('give-ad', hashName, ad);
         return hashName;
-        // TODO: maybe? peer.emit a general replication message (if upload was called via http api)
     }
 
-    const deleteAd = () => {
+
+    /**
+     * Delete specified ad 
+     * @param {string} name - name of file 
+     * 
+     */
+    const deleteAd = (name) => {
+        //#26
+        
+        fs.unlink(path.join(adDir, name), (err) => {
+            if (err) {
+                log.error(err);
+            } else {
+                log.info(`Deleted: ${name}`);
+                peer.emit('delete-ad-replica', name);
+            }
+        });
+        //Inform others
+
 
     }
 
     /**
-         * extracts file extension from a given file name
-         * @param {string} filename The name of the file 
-         * @returns file extension of the input file
-         */
+     * extracts file extension from a given file name
+     * @param {string} filename The name of the file 
+     * @returns file extension of the input file
+     * */
     const checkNumOfValidAd = (validAd) => {
 
         if (!fs.existsSync(adDir)) {
@@ -111,16 +130,27 @@ module.exports = (peer) => {
 
         //Access files in path
         const files = fs.readdirSync(adDir);
+        const validFileExts = ['.png','.jpeg','.jpg'];
 
         //first check all files under ads folder to make sure there is no valid ad even if there are files
         for(let file of files){
             let extension = path.extname(file).toLowerCase();
-            if(extension == '.png' || extension == '.jpeg' || extension == '.jpg'){
+            if(validFileExts.includes(extension)){
+                //Valid file extension detected
                 validAd.push(file);
             }
         }
 
         return validAd;
+
+    }
+
+    const returnAdList = () => {
+        allAds = [];
+
+        allAds = fs.readdirSync(adDir);
+        
+        return allAds;
 
     }
 
@@ -130,7 +160,8 @@ module.exports = (peer) => {
         updatePeerList,
         uploadAd,
         deleteAd,
-        checkNumOfValidAd 
+        checkNumOfValidAd,
+        returnAdList
     }
 
 }

@@ -12,17 +12,24 @@ const app = express();
 const port = process.env.PEER_PORT; // use env defined port or randomly assigned when listenining if undefined so multiple peers can be spawned from same machine
 const chalk = require('chalk');
 var log = require('fancy-log');
+const cors = require('cors');
+const fileUpload = require('express-fileupload');
+
 
 const connectPeer = require('./src/connect-peer');
 // connect peer to system
 const handlers = connectPeer();
 
-app.use(express.static('frontend/public'));     // gui build output folder
+app.use(fileUpload());
+app.use(express.static('frontend/build'));     // gui build output folder
 
 // local api
+app.use(cors());
 const routes = require('./src/routes');
 const router = routes(handlers);
 app.use(router);
+
+
 
 // Set up Peer server API --> GUI!
 const server = app.listen(port, () => { 
