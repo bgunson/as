@@ -100,7 +100,7 @@ module.exports = () => {
 
     socket.on('want-ad', (id, cb) => {
         // do we need this ad?
-        cb(!fs.existsSync(handlers.getAd(id)));
+        cb(!fs.existsSync(path.join(adDir, id)));
     });
 
     socket.connect();

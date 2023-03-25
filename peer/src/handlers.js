@@ -91,7 +91,7 @@ module.exports = (peer) => {
         });
         // peer.emit a general replication message (if upload was called via http api) to other peers
         // Issue#26 (reuse giveAd logic for replicationg)
-        peer.emit('give-ad', name, ad);
+        peer.emit('give-ad', hashName, ad);
         return hashName;
     }
 
@@ -104,14 +104,16 @@ module.exports = (peer) => {
     const deleteAd = (name) => {
         //#26
         
-        fs.unlink(adDir + name, (err) => {
+        fs.unlink(path.join(adDir, name), (err) => {
             if (err) {
                 log.error(err);
+            } else {
+                log.info(`Deleted: ${name}`);
+                peer.emit('delete-ad-replica', name);
             }
-            log.info(`Deleted: ${name}`);
         });
         //Inform others
-        peer.emit('delete-ad-replica', name);
+
 
     }
 
@@ -136,9 +138,6 @@ module.exports = (peer) => {
             if(validFileExts.includes(extension)){
                 //Valid file extension detected
                 validAd.push(file);
-            }
-            else{
-                log.error(chalk.bgKeyword('red')('Invalid file extension! Not supported!'));
             }
         }
 

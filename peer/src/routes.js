@@ -57,8 +57,12 @@ module.exports = (handlers) => {
     router.post('/ad', 
         (req, res) => {
             try{
-                handlers.uploadAd(req.params.id);
-                //ToDo
+                if (req.files?.ad) {
+                    handlers.uploadAd(req.files.ad.name, req.files.ad.data);
+                    res.sendStatus(201);
+                } else {
+                    res.sendStatus(400);
+                }
             } catch(error){
                 console.error(error);
                 res.status(501).send(`Error uploading ad file!`);
@@ -75,6 +79,7 @@ module.exports = (handlers) => {
         (req, res) => {
             try{
                 handlers.deleteAd(req.params.id);
+                res.sendStatus(202);
                 //ToDo
             } catch(error){
                 console.error(error);
@@ -86,7 +91,9 @@ module.exports = (handlers) => {
     router.get('/ads',
         (req,res) => {
             try{
-                const adList = handlers.returnAdList();
+                
+                const adList = [];
+                handlers.checkNumOfValidAd(adList);
                 res.send(adList);
             } catch(error){
                 console.error(error);

@@ -13,11 +13,14 @@ const port = process.env.PEER_PORT; // use env defined port or randomly assigned
 const chalk = require('chalk');
 var log = require('fancy-log');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
+
 
 const connectPeer = require('./src/connect-peer');
 // connect peer to system
 const handlers = connectPeer();
 
+app.use(fileUpload());
 app.use(express.static('frontend/build'));     // gui build output folder
 
 // local api

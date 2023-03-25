@@ -28,6 +28,12 @@ class Home extends Component {
 
   };
 
+  deleteAd = (item) => {
+    fetch(`/ad/${item}`, {
+      method: "DELETE",
+    });
+  }
+
   uploadAd = (item) => {
     const adFile = item.files[0];
     console.log(adFile.name);
@@ -35,7 +41,7 @@ class Home extends Component {
     const formData = new FormData();
     formData.append('ad', adFile);
 
-    fetch("http://localhost:3669/ad", {
+    fetch("/ad", {
       method: "POST",
       body: formData,
     })
@@ -66,8 +72,10 @@ class Home extends Component {
           >
             View
           </button>
+          
           <button
             className="btn btn-danger"
+            onClick={() => this.deleteAd(item)}
           >
             Delete
           </button>
@@ -85,11 +93,11 @@ class Home extends Component {
         <div className="row">
           <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">
-              <form action="/ad" method="post">
+              <form action="/ad" method="post" encType="multipart/form-data">
                 <div className="mb-4">
 
                   <input type="file"
-                    id="ad_picker" name="ad_picker"
+                    id="ad_picker" name="ad"
                     accept='image/*'
                   />
 
@@ -101,10 +109,10 @@ class Home extends Component {
                 >
                   Upload Ad
                 </button>
-                <ul className="list-group list-group-flush border-top-0">
-                  {this.renderItems()}
-                </ul>
               </form>
+              <ul className="list-group list-group-flush border-top-0">
+                {this.renderItems()}
+              </ul>
             </div>
           </div>
         </div>
