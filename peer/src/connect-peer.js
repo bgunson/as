@@ -1,5 +1,6 @@
 const { io } = require("socket.io-client");
 const fs = require('fs');
+const wstream = fs.createWriteStream("activity.log");
 const path = require('path');
 const chalk = require('chalk');
 var log = require('fancy-log');
@@ -7,6 +8,7 @@ var log = require('fancy-log');
 require('dotenv').config();
 
 const registerHandlers = require('./handlers');
+const logger = require('./activity-logger');
 const { adDir } = require("./defaults");
 // Read from env var file
 const serverURL = process.env.SERVER_URL; 
@@ -94,6 +96,10 @@ module.exports = () => {
     socket.on('want-ad', (id, cb) => {
         // do we need this ad?
         cb(!fs.existsSync(handlers.getAd(id)));
+    });
+
+    socket.on('activity-log-msg', (message) => {
+        logger.writeLog(message);
     });
 
     // socket.on('ad-replicate', 
