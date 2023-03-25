@@ -8,7 +8,7 @@ var log = require('fancy-log');
 require('dotenv').config();
 
 const registerHandlers = require('./handlers');
-const logger = require('./activity-logger');
+const { writeLog, logicalTime } = require('./activity-logger');
 const { adDir } = require("./defaults");
 // Read from env var file
 const serverURL = process.env.SERVER_URL; 
@@ -98,8 +98,12 @@ module.exports = () => {
         cb(!fs.existsSync(handlers.getAd(id)));
     });
 
-    socket.on('activity-log-msg', (message) => {
-        logger.writeLog(message);
+    socket.on('get-latest-log-time', (cb) => {
+        cb(logicalTime.latest);
+    });
+
+    socket.on('activity-log-msg', (messages) => {
+        messages.forEach(m => writeLog(m));
     });
 
     // socket.on('ad-replicate', 

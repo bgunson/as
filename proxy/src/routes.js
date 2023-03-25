@@ -3,7 +3,7 @@
  */
 
 const express = require('express');
-const { writeLog } = require('./activity-logger');
+const { writeLog, logicalTime } = require('./activity-logger');
 const router = express.Router();
 
 const { getDefaultAd } = require('./defaults');
@@ -60,9 +60,11 @@ router.get('/ad',
                     reject();  
                 } else {
 
-                    const message = `${Date.now()} peer @ ${peer.handshake.address} served '${fName}'\n`;
-                    writeLog(message);
-                    io.emit('activity-log-msg', message);
+                    const message = `peer @ ${peer.handshake.address} served '${fName}'\n`;
+                    let messages = writeLog(message);
+                    if (messages.length > 0) {
+                        io.emit('activity-log-msg', messages);
+                    }
 
                     resolve(() => {
                         res.contentType(fName);
