@@ -9,6 +9,19 @@ const logicalTime = {
     isLatest: false,
 }
 
+let timeBuffer = [];
+const updateLatestLogTime = (times) => {
+    
+    timeBuffer.push(times);
+    const latestTime = Math.max(...timeBuffer);
+
+    latestTime += 1;
+
+    console.log(latestTime);
+}
+
+
+
 const writeLog = (message) => {
     // buffer the message regardless if can write or not
     msgBuffer.push(message);
@@ -34,5 +47,6 @@ const writeLog = (message) => {
 }
 
 module.exports = {
-    writeLog
+    writeLog,
+    updateLatestLogTime
 }
