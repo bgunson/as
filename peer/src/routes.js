@@ -83,5 +83,17 @@ module.exports = (handlers) => {
         }
     );
 
+    router.get('/ads',
+        (req,res) => {
+            try{
+                const adList = handlers.returnAdList();
+                res.send(adList);
+            } catch(error){
+                console.error(error);
+                res.status(501).send(`Could not get ad list`);
+            }
+        }
+    )
+
     return router;
 }
