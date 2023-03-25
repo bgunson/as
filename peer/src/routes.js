@@ -57,7 +57,7 @@ module.exports = (handlers) => {
     router.post('/ad', 
         (req, res) => {
             try{
-                handlers.uploadAd();
+                handlers.uploadAd(req.params.id);
                 //ToDo
             } catch(error){
                 console.error(error);

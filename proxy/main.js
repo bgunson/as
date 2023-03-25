@@ -4,8 +4,10 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
-  maxHttpBufferSize: 3e6  // 3MB (ad file) max message sixe
+  maxHttpBufferSize: 3e6  // 3MB (ad file) max message size
 });
+const chalk = require('chalk');
+var log = require('fancy-log');
 
 const routes = require('./src/routes');
 
@@ -40,5 +42,5 @@ io.on("connection", onConnection);
 
 
 server.listen(port, () => {
-  console.log(`listening on *: ${port}`);
+  log(chalk.bold(`Proxy live and listening at: ${port}`));
 });

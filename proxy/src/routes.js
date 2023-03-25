@@ -1,5 +1,5 @@
 /**
- * HTTP endpoints
+ * HTTP endpoints for proxy server
  */
 
 const express = require('express');
