@@ -18,7 +18,7 @@ const connectPeer = require('./src/connect-peer');
 // connect peer to system
 const handlers = connectPeer();
 
-app.use(express.static('frontend/public'));     // gui build output folder
+app.use(express.static('frontend/build'));     // gui build output folder
 
 // local api
 app.use(cors());

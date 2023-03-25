@@ -14,7 +14,7 @@ class Home extends Component {
   }
 
   refreshAdList = () => {
-    fetch("http://localhost:3669/ads")
+    fetch("/ads")
       .then((response) => response.json())
       .then((data) => this.setState({ adList: data }));
 
@@ -23,7 +23,7 @@ class Home extends Component {
 
 
   viewAd = (item) => {
-    window.open('http://localhost:3669/ad/'.concat(item), '_blank', 'noreferrer');
+    window.open('ad/'.concat(item), '_blank', 'noreferrer');
 
 
   };
