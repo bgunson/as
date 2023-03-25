@@ -42,7 +42,7 @@ module.exports = (io, socket, peers) => {
     }
 
     const deleteAd = (id) =>{
-        io.socket.brodcast.emit('delete-ad', id);
+        socket.broadcast.emit('delete-ad', id);
     }
 
     /**
