@@ -1,6 +1,6 @@
 
 const fs = require('fs');
-const wstream = fs.createWriteStream("activity.log");
+const wstream = fs.createWriteStream("activity.log", { flags: "a" });
 
 let msgBuffer = [];
 
@@ -11,13 +11,16 @@ const logicalTime = {
 
 let timeBuffer = [];
 const updateLatestLogTime = (times) => {
-    
+    // TODO: set logger's logical time iff max(...ts)+1 > latest, and set isLatest to true
+    // latest will always be 0 on startup, so maybe we should read this proxy's activity log and get the last
     timeBuffer.push(times);
     const latestTime = Math.max(...timeBuffer);
 
     latestTime += 1;
 
     console.log(latestTime);
+
+    // TODO: fill in missing logs from peers in range [max(...ts)-latest .. max(...ts)]
 }
 
 
@@ -33,7 +36,7 @@ const writeLog = (message) => {
         // empty and write all messages in the buffer
         while (msgBuffer.length > 0) {
             let m = `${++logicalTime.latest} ${msgBuffer.pop()}`;
-            logged.push(m)
+            logged.push(m);
             wstream.write(m, (err) =>{
                 if(err){
                     console.log(err.message);

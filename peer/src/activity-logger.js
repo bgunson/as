@@ -2,20 +2,12 @@
 const fs = require('fs');
 const wstream = fs.createWriteStream("activity.log", { flags: "a" });
 
-const Tail = require('tail').Tail;
-
-wstream.on('open', () => {
-    new Tail("activity.log").on('line', data => {
-        let list = data.split(' ');
-        if (list.length > 0) {
-            logicalTime.latest = list[0];
-        }
-    });
-});
-
-
 const logicalTime = {
-    latest: 0
+    latest: 0,
+    getLatest: () => {
+        // TODO: read last line of file, parse logical timestamp
+        return Math.round(Math.random() * 69)
+    }
 }
 
 const writeLog = (message) => {

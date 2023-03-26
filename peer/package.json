@@ -31,8 +31,7 @@
     "if-env": "latest",
     "readline-sync": "^1.4.10",
     "socket.io": "latest",
-    "socket.io-client": "latest",
-    "tail": "^2.2.6"
+    "socket.io-client": "latest"
   },
   "devDependencies": {
     "concurrently": "latest",

@@ -15,6 +15,7 @@ const peers = new Peers();
 
 // socket.io event handlers for peers
 const registerHandlers = require('./src/handlers');
+const { updateLatestLogTime } = require('./src/activity-logger');
 
 const port = process.env.PORT || 3000;
 
@@ -27,6 +28,28 @@ app.use(routes);
 
 app.use(express.static('public'));
 
+let syncInterval = setInterval(async () => {
+  console.log("Need to sync logical time before logging ledgers");
+
+  if (peers.all.length > 0) {
+
+    console.log("Performing time sync with a connected peer");
+
+    let ts = await Promise.all(peers.all.map(socket => {
+      return new Promise(resolve => {
+        socket.emit('get-latest-log-time', (t) => {
+          resolve(t);
+        });
+      });
+    }))
+    
+    updateLatestLogTime(ts);
+
+    clearInterval(syncInterval);
+  }
+
+}, 5000);
+
 
 /**
  * Handle a peer connecting via ws
@@ -37,7 +60,6 @@ const onConnection = (socket) => {
 }
 
 io.on("connection", onConnection);
-
 
 server.listen(port, () => {
   console.log(`listening on *: ${port}`);

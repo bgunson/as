@@ -59,7 +59,6 @@ router.get('/ad',
                 if (!fType) {
                     reject();  
                 } else {
-                    io.emit('get-latest-log-time', (what goes here?));
                     const message = `peer @ ${peer.handshake.address} served '${fName}'\n`;
                     let messages = writeLog(message);
                     if (messages.length > 0) {

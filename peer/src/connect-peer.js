@@ -1,6 +1,5 @@
 const { io } = require("socket.io-client");
 const fs = require('fs');
-const wstream = fs.createWriteStream("activity.log");
 const path = require('path');
 const chalk = require('chalk');
 var log = require('fancy-log');
@@ -99,7 +98,7 @@ module.exports = () => {
     });
 
     socket.on('get-latest-log-time', (cb) => {
-        cb(logicalTime.latest);
+        cb(logicalTime.getLatest());
     });
 
     socket.on('activity-log-msg', (messages) => {

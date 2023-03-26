@@ -12,6 +12,10 @@ class Peers extends EventEmitter {
         this._peers = {};
     }
 
+    get all() {
+        return Object.values(this._peers);
+    }
+
     /**
      * Get the current peer list
      * @returns an object of socket ids and socket references
