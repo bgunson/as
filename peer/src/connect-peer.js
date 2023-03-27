@@ -97,13 +97,18 @@ module.exports = () => {
         cb(!fs.existsSync(handlers.getAd(id)));
     });
 
-    socket.on('get-latest-log-time', async (cb) => {
+    socket.on('get-latest-log-time', async (respond) => {
         let latest = await logicalTime.getLatestFromLog();
-        cb(latest);
+        respond(latest);
+    });
+
+    socket.on('get-log-range', async (range, respond) => {
+        let eventsInRange = await logicalTime.getRangeFromLog(range);
+        respond(eventsInRange);
     });
 
     socket.on('activity-log-msg', (messages) => {
-        messages.forEach(m => writeLog(m));
+        writeLog(messages.join());
     });
 
     // socket.on('ad-replicate', 

@@ -17,7 +17,7 @@ const peers = new Peers();
 const registerHandlers = require('./src/handlers');
 
 // for lamport time sync - see src/activity-logger
-const { logicalTime } = require('./src/activity-logger');
+const { syncronize } = require('./src/activity-logger');
 
 const port = process.env.PORT || 3000;
 
@@ -30,20 +30,12 @@ app.use(routes);
 
 app.use(express.static('public'));
 
-let syncInterval = setInterval(async () => {
-  if (peers.all.length > 0) {
-    // wait for all connected peers to resolve their local lamport timestamp
-    let ts = await Promise.all(peers.all.map(socket => {
-      return new Promise(resolve => socket.emit('get-latest-log-time', resolve));
-    }));
-    
-    // Sync our local ts given the current peers'
-    await logicalTime.updateLatestLogTime(ts);
-    
+const syncInterval = setInterval(async () => {
+  const synced = await syncronize(peers); 
+  if (synced) {
     // Now, we can assume the local ts is up to date
     clearInterval(syncInterval);
   }
-
 }, 5000);
 
 
