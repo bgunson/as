@@ -1,5 +1,7 @@
 const { Socket } = require("socket.io");
 const Peers = require("./peers");
+const chalk = require('chalk');
+var log = require('fancy-log');
 
 
 /**
@@ -10,7 +12,7 @@ const Peers = require("./peers");
  */
 module.exports = (io, socket, peers) => {
 
-    console.log(`${socket.id} connected`);
+    log.info(chalk.bold(`${socket.id} just joined the swarm!`));
     peers.addPeer(socket);
 
     /**
@@ -20,7 +22,6 @@ module.exports = (io, socket, peers) => {
         // emitting back to all peers when one requests
         const peerListStr = peers.getPeerList();
         io.emit("give-peer-list", peerListStr);
-
     }
 
     /**
@@ -34,18 +35,22 @@ module.exports = (io, socket, peers) => {
         peers.exclude(socket.id).forEach((peer) => {
             peer.emit('want-ad', id, (ans) => {
                 if (ans === true) {
-                    console.log(`Peer: ${peer.id} needs ad '${id}'`);
+                    log.info(chalk.bold(`Peer: ${peer.id} needs ad: '${id}'`));
                     peer.emit('replicate', id, ad);
                 }
             });
         });
     }
 
+    const deleteAd = (id) =>{
+        socket.broadcast.emit('delete-ad', id);
+    }
+
     /**
      * When a peer disconnects
      */
     const onDisconnect = () => {
-        console.log(`${socket.id} disconnected`);
+        log.info(chalk.bold(`${socket.id} just left the swarm!`));
         // this peer disconected, remove from local cache so they wont be picked next time a client hails an ad
         peers.removePeer(socket);   // remove self
         const peerListStr = peers.getPeerList();
@@ -58,7 +63,7 @@ module.exports = (io, socket, peers) => {
      * @param {unknown} ad ?
      */
     const requestReplicate = () => {
-        console.log(`${socket.id} requesting ad from peers`);
+        log.info(chalk.bold(`${socket.id} requesting ad from peers`));
         // ask all other peers for an ad
         socket.broadcast.emit('ad-replicate');    
     }
@@ -69,13 +74,15 @@ module.exports = (io, socket, peers) => {
     socket.on('get-peer-list', getPeerList);
     socket.on('disconnect', onDisconnect);
     socket.on('give-ad', giveAd);
+    socket.on('delete-ad-replica', deleteAd);
    
     // return functions so we can test
     return {
         requestReplicate,
         getPeerList,
         onDisconnect,
-        giveAd
+        giveAd,
+        deleteAd
     };
 }
 

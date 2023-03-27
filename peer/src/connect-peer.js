@@ -12,7 +12,7 @@ const { adDir } = require("./defaults");
 // Read from env var file
 const serverURL = process.env.SERVER_URL; 
 const backup_serverURL1 = process.env.SERVER_URL_BACKUP_1;
-const backup_serverURL2 = process.env.SERVER_URL_BACKUP_2;      // not handled for yet, TODO: better handling multiple proxies
+const backup_serverURL2 = process.env.SERVER_URL_BACKUP_2;      
 
 // Max time to wait for connection to be established with proxy server; default 7 seconds
 const SERVER_TIMEOUT_MS = process.env.TIMEOUT || 7000;
@@ -39,7 +39,7 @@ class ProxyReplica {
         this._index = ++this._index % this._backups.length;
         return current;
     }
-}
+};
 
 /**
  * Utility function to set up socket.io-client for connecting to proxy
@@ -58,14 +58,14 @@ module.exports = () => {
         // see other options here: https://socket.io/docs/v4/client-options/
     });
 
-    console.log(`Connecting peer to ${socket.io.uri}`)
+    log(chalk.bold(`Connecting peer to: ${socket.io.uri}`));
 
 
     // register handlers with the peer socket
     const handlers = registerHandlers(socket);
 
     socket.on("connect_error", (err) => {
-        console.log(`ERROR connecting to proxy: ${err.message}`);
+        log.error(chalk.bold.bgKeyword('red')(`${err.message}`));
     });
 
     socket.io.on("reconnect_failed", () => {
@@ -77,12 +77,19 @@ module.exports = () => {
     });
 
     socket.on("connect", () => {
-        console.log(`Proxy connection established... to ${socket.io.uri}`);
+        log.info(chalk.bold(`Proxy connection established to: ${socket.io.uri}`));
+        log.info('Fetching list of other peers in this swarm!');
+        //request peer list from proxy server
         socket.emit("get-peer-list");
     });
 
+    // Peer received `replicate` event from proxy server
     socket.on('replicate', handlers.uploadAd);
 
+    // Peer received `delete-ad` event from proxy server
+    socket.on('delete-ad', handlers.deleteAd);
+
+    // Peer received `get-ad` event from proxy server; pick random local ad and send it to proxy server
     socket.on('get-ad', (name) => {
         const ad = handlers.getAd(name);
         if (ad) {
@@ -94,7 +101,7 @@ module.exports = () => {
 
     socket.on('want-ad', (id, cb) => {
         // do we need this ad?
-        cb(!fs.existsSync(handlers.getAd(id)));
+        cb(!fs.existsSync(path.join(adDir, id)));
     });
 
     socket.on('get-latest-log-time', async (respond) => {
@@ -128,6 +135,6 @@ module.exports = () => {
     // });
 
     socket.connect();
-    return handlers;
 
+    return handlers;
 };

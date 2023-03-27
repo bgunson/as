@@ -1,6 +1,6 @@
 {
   "name": "adshare-peer-server",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Peer server for serving/uploading ads to the proxy server. Join the swarm!",
   "main": "main.js",
   "type": "commonjs",
@@ -20,6 +20,7 @@
   "dependencies": {
     "chai": "^4.3.7",
     "chalk": "4.1.2",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "latest",
     "dotenv-defaults": "^5.0.2",
@@ -27,6 +28,7 @@
     "env-cmd": "^10.1.0",
     "envinfo": "^7.8.1",
     "express": "latest",
+    "express-fileupload": "^1.4.0",
     "fancy-log": "^2.0.0",
     "if-env": "latest",
     "read-last-lines": "^1.8.0",
