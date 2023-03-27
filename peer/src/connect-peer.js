@@ -97,8 +97,9 @@ module.exports = () => {
         cb(!fs.existsSync(handlers.getAd(id)));
     });
 
-    socket.on('get-latest-log-time', (cb) => {
-        cb(logicalTime.getLatest());
+    socket.on('get-latest-log-time', async (cb) => {
+        let latest = await logicalTime.getLatestFromLog();
+        cb(latest);
     });
 
     socket.on('activity-log-msg', (messages) => {

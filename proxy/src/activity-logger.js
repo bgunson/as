@@ -1,28 +1,54 @@
 
 const fs = require('fs');
+const readLastLines = require('read-last-lines');
 const wstream = fs.createWriteStream("activity.log", { flags: "a" });
 
-let msgBuffer = [];
+const  msgBuffer = [];
 
 const logicalTime = {
+    /**
+     * Local lamport timestamp; assume 0 but will be updated when 
+     */
     latest: 0,
-    isLatest: true,
-}
 
-let timeBuffer = [];
-const updateLatestLogTime = (times) => {
-    // TODO: set logger's logical time iff max(...ts)+1 > latest, and set isLatest to true
-    // latest will always be 0 on startup, so maybe we should read this proxy's activity log and get the last
-    timeBuffer.push(times);
-    latest = Math.max(...timeBuffer);
+    /**
+     * Initially false, on proxy startup we ask other peers to see who has the latest ts 
+     * then set this flag to true which allows subsequent logs to be written with the correct ts
+     */
+    isSynced: false,
 
-    console.log(timeBuffer);
+    /**
+     * Grab the latest ts (last line) from local ledger
+     * @returns 
+     */
+    getLatestFromLog: async () => {
+        const lastline = (await readLastLines.read("activity.log", 1)).trimEnd();
+        if (lastline.split(' ').length > 0) {
+            // we can parse out a ts
+            this.latest = lastline.split(" ")[0];
+        } 
+        return this.latest;
+    },
 
-    latest += 1;
+    /**
+     * Sync local lamport timestamp to be max of times concat lastes from local log file (+1).
+     * @param {number[]} peerTs - list of current timestamps from connected peers 
+     */
+    updateLatestLogTime: async (peerTs) => {
+        // latest will always be 0 on startup, so maybe we should read this proxy's activity log and get the last
+        const localLatest = await logicalTime.getLatestFromLog();
+        const peerLatest = Math.max(...peerTs);
+        // the latest will be the maximum of the peers or the latest from the log (could be 0 if no log on this proxy machine)
+        logicalTime.latest = Math.max(peerLatest, localLatest);
 
-    console.log(latest);
-
-    // TODO: fill in missing logs from peers in range [max(...ts)-latest .. max(...ts)]
+        // TODO: fill in missing logs from peers in range
+        // this will require additional proxy-peer coms asking them if they have anything in their logs with 
+        // lamport ts in range [peerLatest-localLatest .. peerLatest]
+        
+        // next call to writeLog will flush msgBuffer AND increment it +1 so we do not need to excplicitly incr
+        logicalTime.isSynced = true;  
+        return logicalTime.latest; 
+    },
 }
 
 
@@ -32,7 +58,7 @@ const writeLog = (message) => {
     msgBuffer.push(message);
 
     // if we can write
-    if (logicalTime.isLatest) {
+    if (logicalTime.isSynced) {
         let logged = [];   // copy the current buffer to return
 
         // empty and write all messages in the buffer
@@ -53,5 +79,5 @@ const writeLog = (message) => {
 
 module.exports = {
     writeLog,
-    updateLatestLogTime
+    logicalTime
 }

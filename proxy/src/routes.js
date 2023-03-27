@@ -3,7 +3,7 @@
  */
 
 const express = require('express');
-const { writeLog, logicalTime, updateLatestLogTime } = require('./activity-logger');
+const { writeLog } = require('./activity-logger');
 const router = express.Router();
 
 const { getDefaultAd } = require('./defaults');
