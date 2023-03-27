@@ -28,16 +28,12 @@ const writeLog = (message) => {
  * Get a range of lines (events) from the local activity.log 
  * @param {number} range - range of events needed i.e. timestamps from this log. e.g. [24, 30] means we need to 
  * parse the log file for lines w/ timestamp 24 though 30 (inclusive) and return them.
- * @returns a list of events from the ledger in the range given.
+ * @returns events from the ledger in the range given.
  */
-const getRangeFromLog = (range) => {
-    /**
-     * TODO:
-     * 1. open the ledger file
-     * 2. readlines until evetn with ts_1 == range[0] is found
-     * 3. return ts_1 .. ts_2 where ts_2 is event range[1]
-     */
-    return []
+const getRangeFromLog = async (range) => {
+    const nLines = range[1] - range[0];
+    const lines = await readLastLines.read("activity.log", nLines);
+    return lines;
 }
 
 module.exports = {

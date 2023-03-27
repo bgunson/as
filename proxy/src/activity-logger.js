@@ -43,9 +43,12 @@ const logicalTime = {
         // the latest will be the maximum of the peers or the latest from the log (could be 0 if no log on this proxy machine)
         logicalTime.latest = Math.max(peerLatest, localLatest);
 
+        console.log(`Latest time determined to be ${logicalTime.latest}`)
+
         let missingRange;
         if (localLatest < peerLatest) {
             missingRange = [localLatest + 1, peerLatest];
+            console.log(`We are missing events in the range ${missingRange} (inclusive)`);
         }
 
         // next call to writeLog will flush msgBuffer AND increment it +1 so we do not need to excplicitly incr
@@ -79,7 +82,7 @@ const syncronize = async (peers) => {
                 gaps.sort((a, b) => a.length > b.length);   
                 // the most complete range will be one that has length equal or nearest gap[1]-gap[0]
                 const missingLogs = gaps[0];
-                wstream.write(missingLogs.join());  // TODO: make sure peers respond with messages including newline chars
+                wstream.write(missingLogs);  // TODO: make sure peers respond with messages including newline chars
             }
         }
 

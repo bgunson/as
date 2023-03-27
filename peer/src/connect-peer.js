@@ -7,7 +7,7 @@ var log = require('fancy-log');
 require('dotenv').config();
 
 const registerHandlers = require('./handlers');
-const { writeLog, logicalTime } = require('./activity-logger');
+const { writeLog, getRangeFromLog, logicalTime } = require('./activity-logger');
 const { adDir } = require("./defaults");
 // Read from env var file
 const serverURL = process.env.SERVER_URL; 
@@ -103,7 +103,7 @@ module.exports = () => {
     });
 
     socket.on('get-log-range', async (range, respond) => {
-        let eventsInRange = await logicalTime.getRangeFromLog(range);
+        let eventsInRange = await getRangeFromLog(range);
         respond(eventsInRange);
     });
 
