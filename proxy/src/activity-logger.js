@@ -6,7 +6,7 @@ let msgBuffer = [];
 
 const logicalTime = {
     latest: 0,
-    isLatest: false,
+    isLatest: true,
 }
 
 let timeBuffer = [];
@@ -14,11 +14,13 @@ const updateLatestLogTime = (times) => {
     // TODO: set logger's logical time iff max(...ts)+1 > latest, and set isLatest to true
     // latest will always be 0 on startup, so maybe we should read this proxy's activity log and get the last
     timeBuffer.push(times);
-    const latestTime = Math.max(...timeBuffer);
+    latest = Math.max(...timeBuffer);
 
-    latestTime += 1;
+    console.log(timeBuffer);
 
-    console.log(latestTime);
+    latest += 1;
+
+    console.log(latest);
 
     // TODO: fill in missing logs from peers in range [max(...ts)-latest .. max(...ts)]
 }
