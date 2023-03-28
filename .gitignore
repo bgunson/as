@@ -4,6 +4,6 @@ node_modules
 x*.js
 docker-compose-dev.yml
 peer/ads/**
-activity.log
+activity*.log
 .DS_Store
 .Rhistory
