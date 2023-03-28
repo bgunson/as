@@ -5,6 +5,7 @@
 const express = require('express');
 const { writeLog } = require('./activity-logger');
 const router = express.Router();
+const path = require('path');
 
 const { getDefaultAd, adTimeoutMs } = require('./defaults');
 const { isValidType } = require('./validators');
@@ -19,6 +20,16 @@ router.get('/version',
         const { version } = require('../package.json');
         res.send(version);
     }
+);
+
+router.get('/ledger', 
+    /**
+     * @param {express.Request} req - GET /ledger 
+     * @param {express.Response}} res - current ledger log file 
+     */
+    (req, res) => {
+        res.sendFile(path.resolve("activity.log"));
+    }   
 );
 
 router.get('/peers', 
@@ -59,7 +70,7 @@ router.get('/ad',
                 if (!fType) {
                     reject();  
                 } else {
-                    const message = `peer @ ${peer.handshake.address} served '${fName}'\n`;
+                    const message = `peer ${peer.id} served ${fName}\n`;
                     let messages = writeLog(message);
                     if (messages.length > 0) {
                         io.emit('activity-log-msg', messages);
