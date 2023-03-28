@@ -6,7 +6,7 @@ const express = require('express');
 const { writeLog } = require('./activity-logger');
 const router = express.Router();
 
-const { getDefaultAd } = require('./defaults');
+const { getDefaultAd, adTimeoutMs } = require('./defaults');
 const { isValidType } = require('./validators');
 
 
@@ -47,7 +47,7 @@ router.get('/ad',
         io.emit('get-ad');
 
         const timeoutAd = new Promise((resolve, reject) => {
-            setTimeout(reject, 2000);
+            setTimeout(reject, adTimeoutMs);
         });
 
         const peerAd = new Promise((resolve, reject) => {
