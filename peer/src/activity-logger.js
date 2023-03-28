@@ -1,13 +1,13 @@
-
+const { ledgerFileName } = require('./defaults');
 const fs = require('fs');
-const wstream = fs.createWriteStream("activity.log", { flags: "a" });
+const wstream = fs.createWriteStream(ledgerFileName, { flags: "a" });
 
 const readLastLines = require('read-last-lines');
 
 const logicalTime = {
     latest: 0,
     getLatestFromLog: async () => {
-        const lastline = (await readLastLines.read("activity.log", 1)).trimEnd();
+        const lastline = (await readLastLines.read(ledgerFileName, 1)).trimEnd();
         if (lastline.split(' ').length > 0) {
             // we can parse out a ts
             this.latest = lastline.split(" ")[0];
@@ -32,7 +32,7 @@ const writeLog = (message) => {
  */
 const getRangeFromLog = async (range) => {
     const nLines = range[1] - range[0];
-    const lines = await readLastLines.read("activity.log", nLines);
+    const lines = await readLastLines.read(ledgerFileName, nLines);
     return lines;
 }
 
