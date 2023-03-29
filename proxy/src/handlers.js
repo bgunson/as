@@ -43,7 +43,19 @@ module.exports = (io, socket, peers) => {
     }
 
     const deleteAd = (id) =>{
-        socket.broadcast.emit('delete-ad', id);
+        // If we want ads to be deleted by all peers:
+        // socket.broadcast.emit('delete-ad', id);
+
+        /**
+         * If we want deletion to be ingerently weak:
+         * 
+         * choose an arbitrary peer:
+         * 
+         * - if the peer is the same one who just initiated the deletion, then the propogation will terminate and they will be the only ones who actuall rm the file
+         * - if the peer is a different peer, then they will perform the delete and emit back here where this routine will restart
+         */
+        peers.choosePeer().emit('delete-ad', id);
+
     }
 
     /**
