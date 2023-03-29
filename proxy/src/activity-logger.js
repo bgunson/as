@@ -3,8 +3,29 @@ const fs = require('fs');
 const readLastLines = require('read-last-lines');
 const Peers = require('./peers');
 const wstream = fs.createWriteStream("activity.log", { flags: "a" });
+wstream.on('open', (fd) => {
+    console.log(fd)
+})
 
 const msgBuffer = [];
+
+/**
+ * Read from the ledger ignoring empty lines (excess newline chars)
+ * @param {Number} n - the number of lines ot read 
+ * @returns The last non empty line from the file, unless we have tried to read more lines than actually exist. 
+ *          Else, recurse and read n+1 lines 
+ */
+const readUntilNotEmpty = async (n=1) => {
+    const line = await readLastLines.read("activity.log", n);
+    if (line.split('\n').length < n) {
+        // base case: we tried to read more lines than in the file without finding a valid line so return empty line
+        // prevents infinite recursion on empty files
+        return line;
+    } else if (!line.trim()) {
+        return readUntilNotEmpty(n+1);
+    }   
+    return line;
+}
 
 const logicalTime = {
     /**
@@ -23,10 +44,10 @@ const logicalTime = {
      * @returns 
      */
     getLatestFromLog: async () => {
-        const lastline = (await readLastLines.read("activity.log", 1)).trimEnd();
+        const lastline = await readUntilNotEmpty();
         if (lastline.split(' ').length > 0) {
             // we can parse out a ts
-            this.latest = lastline.split(" ")[0];
+            this.latest = Number(lastline.split(" ")[0]);
         }
         return this.latest;
     },
