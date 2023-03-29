@@ -17,14 +17,14 @@ const msgBuffer = [];
  */
 const readUntilNotEmpty = async (n=1) => {
     const line = await readLastLines.read("activity.log", n);
-    if (line.split('\n').length < n) {
-        // base case: we tried to read more lines than in the file without finding a valid line so return empty line
-        // prevents infinite recursion on empty files
-        return line;
-    } else if (!line.trim()) {
+    if (line.trimEnd().length > 0 || n > line.split('\n').length) {
+        // base case: we tried to read more lines than in the file without finding a valid line so return whatever we have
+        // or read a non empty line
+        return line.trimEnd();
+    } else {
+        // Read again but increment the number of lines
         return readUntilNotEmpty(n+1);
     }   
-    return line;
 }
 
 const logicalTime = {
