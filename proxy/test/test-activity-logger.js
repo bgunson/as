@@ -9,6 +9,12 @@ describe('activity-logger', () => {
         let latest = await logicalTime.getLatestFromLog();
         assert.equal(latest, 69);
     });
+
+    it('#logicalTime.getLatestFromLog should ignore excess newlines chars', async () => {
+        fs.writeFileSync("activity.log", "69 test\n\n\n");
+        let latest = await logicalTime.getLatestFromLog();
+        assert.equal(latest, 69);
+    });
     
     it('#logicalTime.updateLatestLogTime should return number from log', async () => {
         await logicalTime.updateLatestLogTime([1,2,3]);
