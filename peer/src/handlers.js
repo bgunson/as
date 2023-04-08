@@ -5,6 +5,7 @@ const { Socket } = require('socket.io-client');
 const chalk = require('chalk');
 var log = require('fancy-log');
 const { adDir } = require('./defaults');
+const AdList = require('./adlist');
 
 
 /**
@@ -12,6 +13,9 @@ const { adDir } = require('./defaults');
  * @returns api functions
  */
 module.exports = (peer) => {
+
+    const whitelist = new AdList('whitelist');
+    const blacklist = new AdList('blacklist');
 
     let peers;
 
@@ -161,7 +165,9 @@ module.exports = (peer) => {
         uploadAd,
         deleteAd,
         checkNumOfValidAd,
-        returnAdList
+        returnAdList,
+        whitelist, 
+        blacklist
     }
 
 }
