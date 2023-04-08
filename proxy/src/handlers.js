@@ -31,10 +31,7 @@ module.exports = (io, socket, peers) => {
      */
     const giveAd = (id, ad) => {
         peers.emit("give-ad", socket, id, ad);
-        // when an ad is incoming to the proxy ask all others if they need it to be replicated
-        // peers.exclude(socket.id).forEach((peer) => {
-        //     peer
-            
+        // when an ad is incoming to the proxy ask another if they need it to be replicated
         const randPeer = peers.choosePeer();
         randPeer.emit('want-ad', id, (ans) => {
             if (ans === true) {
@@ -42,7 +39,6 @@ module.exports = (io, socket, peers) => {
                 randPeer.emit('replicate', id, ad);
             }
         });
-        // });
     }
 
     const deleteAd = (id) =>{
