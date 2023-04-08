@@ -68,7 +68,7 @@ const logicalTime = {
 
         let missingRange;
         if (localLatest < peerLatest) {
-            missingRange = [localLatest + 1, peerLatest];
+            missingRange = [localLatest, peerLatest + 1];
             console.log(`We are missing events in the range ${missingRange} (inclusive)`);
         }
 
