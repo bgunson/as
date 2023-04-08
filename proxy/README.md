@@ -26,3 +26,18 @@
 Something something better way of securing env vars....
 </p>
 </details>
+
+# Versioning/Building/Deploying
+
+We are using a form of semantic versioning to track the version of proxy, and then trigger the workflow to deploy an instance to app engine. To do so, use the git tagging procedure. Be sure you have already bumped the proxy version as well:
+
+In the proxy folder:
+```
+npm version 'major|minor|patch'
+
+# then commit this change to main, or you branch prior to a PR/merge, next
+
+git tag -a v1.0.0-proxy -m "proxy version 1.0.0"    # e.g. version 1.0.0
+
+git push --tags
+```
