@@ -90,7 +90,7 @@ module.exports = (peer) => {
             };
         });
         // peer.emit a general replication message (if upload was called via http api) to other peers
-        // Issue#26 (reuse giveAd logic for replicationg)
+        // Issue#26 (reuse giveAd logic for replicating ad)
         peer.emit('give-ad', hashName, ad);
         return hashName;
     }
@@ -98,27 +98,23 @@ module.exports = (peer) => {
 
     /**
      * Delete specified ad 
-     * @param {string} name - name of file 
-     * 
+     * @param {string} name - name of ad file 
      */
     const deleteAd = (name) => {
-        //#26
-        
+
         fs.unlink(path.join(adDir, name), (err) => {
             if (err) {
                 log.error(err);
             } else {
-                log.info(`Deleted: ${name}`);
+                log.info(`Deleted ad: ${name}`);
+                // Inform other peers to do same through the proxy server
                 peer.emit('delete-ad-replica', name);
             }
         });
-        //Inform others
-
-
     }
 
     /**
-     * extracts file extension from a given file name
+     * Extracts file extension from a given ad file name and returns it if it is valid
      * @param {string} filename The name of the file 
      * @returns file extension of the input file
      * */

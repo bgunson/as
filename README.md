@@ -2,7 +2,7 @@
 #### CPSC 559 - Group 7
 ___
 
-Here is a small NodeJS proof of conecpt for adshare using the client-server architecture. We have 3 actors: the proxy, servers, and clients.
+Here is a small NodeJS proof of concept for adshare using the client-server architecture. We have 3 actors: the proxy, servers, and clients.
 
 - Proxy: is an always active, dynamically (DNS) named web server which handles distribution of advertisments.
 - Servers: is any machine opted into adshare who stores and returns ad files to the proxy, then further to the clients.
