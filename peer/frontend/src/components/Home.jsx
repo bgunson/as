@@ -32,20 +32,32 @@ class Home extends Component {
     fetch(`/ad/${item}`, {
       method: "DELETE",
     });
+    window.location.reload();
+
   }
 
   uploadAd = (item) => {
-    const adFile = item.files[0];
+    
+
+    item.preventDefault();
+    let input = document.querySelector('#ad_picker')
+    const formData = new FormData();
+  
+
+    const adFile = input.files[0];
     console.log(adFile.name);
 
-    const formData = new FormData();
+      
     formData.append('ad', adFile);
-
+    
+    
     fetch("/ad", {
       method: "POST",
       body: formData,
+    
     })
 
+    window.location.reload();
 
   };
 
@@ -59,10 +71,14 @@ class Home extends Component {
         key={item.id}
         className="list-group-item d-flex justify-content-between align-items-center"
       >
+        <span>
+        <img src= {`/ad/${item}`} alt="logo" style={{maxWidth:"100px",width:"auto",maxHeight:"100px",height:"auto"}}/>
+        </span>
         <span
           className={`todo-title mr-2`}
           title={item.description}
-        >
+        > 
+
           {item}
         </span>
         <span>
@@ -93,7 +109,8 @@ class Home extends Component {
         <div className="row">
           <div className="col-xl-10 mx-auto p-0">
             <div className="card p-4 mx-auto w-100">
-              <form action="/ad" method="post" encType="multipart/form-data">
+              
+              <form action="/ad" method="post" encType="multipart/form-data" >
                 <div className="mb-4">
 
                   <input type="file"
@@ -105,7 +122,8 @@ class Home extends Component {
                 <button
                   type="submit"
                   className="btn btn-primary"
-
+                  onClick={this.uploadAd}
+                  
                 >
                   Upload Ad
                 </button>
