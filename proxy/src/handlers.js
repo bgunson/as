@@ -31,14 +31,13 @@ module.exports = (io, socket, peers) => {
      */
     const giveAd = (id, ad) => {
         peers.emit("give-ad", socket, id, ad);
-        // when an ad is incoming to the proxy ask all others if they need it to be replicated
-        peers.exclude(socket.id).forEach((peer) => {
-            peer.emit('want-ad', id, (ans) => {
-                if (ans === true) {
-                    log.info(chalk.bold(`Peer: ${peer.id} needs ad: '${id}'`));
-                    peer.emit('replicate', id, ad);
-                }
-            });
+        // when an ad is incoming to the proxy ask another if they need it to be replicated
+        const randPeer = peers.choosePeer();
+        randPeer.emit('want-ad', id, (ans) => {
+            if (ans === true) {
+                log.info(chalk.bold(`Peer: ${randPeer.id} needs ad: '${id}'`));
+                randPeer.emit('replicate', id, ad);
+            }
         });
     }
 
