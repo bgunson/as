@@ -2,11 +2,11 @@
 #### CPSC 559 - Group 7
 ___
 
-Here is a small NodeJS proof of conecpt for adshare using the client-server architecture. We have 3 actors: the proxy, servers, and clients.
+Here is a small NodeJS proof of concept for AdShare using the client-server architecture. We have 3 actors that interact with the system: the Proxy, the Peer, and the Client.
 
 - Proxy: is an always active, dynamically (DNS) named web server which handles distribution of advertisments.
-- Servers: is any machine opted into adshare who stores and returns ad files to the proxy, then further to the clients.
-- Clients: are any website which embeds an adshare in their site.
+- Peer: is any machine opted into adshare who stores and returns ad files to the proxy, then further to the clients.
+- Clients: are any website which embeds an adshare endpoint in their site.
 
 To run, make sure you have Node and npm installed on your computer and run:
 
@@ -55,11 +55,29 @@ This would be any website using our service. For now it is just a single html pa
 ___
 
 
-### Sequence
+## Environment variables
+<a name="readme-envars-detail"></a>
+
+* <b>Peer</b>
+
+| Variable                    | Description                                                                                                                                                  | Default Value                           |
+|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------|
+| `NODE_ENV`    | Define the current environment of the Node.js app                                              | production                                |
+| `PEER_PORT`            | Define the port at which the Peer server (API) will be available at.                                                                               | 3000                                |
+| `SERVER_URL`            | Define the URL of primary Proxy server to which the Peer will try to connect to.                                                                               | https://amazing-limiter-378022.uw.r.appspot.com                                |
+| `SERVER_URL_BACKUP_1`            | Define the URL to backup Proxy server to which Peer will try to connect to in case the primary is unresponsive.                                                                               | http://aspxy3.bhodrolok.xyz/                                |
+| `SERVER_URL_BACKUP_2`            | Define the URL to backup Proxy server to which Peer will try to connect to in case the primary and other backup is unresponsive.                                                                               | http://aspxy4.bhodrolok.xyz/                                |
+| `CONN_TIMEOUT`            | Define the timeout, in milliseconds, for each connection attempt.                                                                               | 6000                                |
+| `NUM_RETRIES`            | Define the number of times the Peer will attempt reconnecting to the Proxy.                                                                               | 2                               |
+| `RETRY_INTERVAL_MS`            | Define the intiial delay (in milliseconds) between each reconnection attempt.                                                                              | 1234                               |
+
+
+___
+## Communication Sequence Diagram
 
 ![](./seq1.png)
 
 ___
-#### Architecture
+## System Architecture
 
 ![](./arch.png)
