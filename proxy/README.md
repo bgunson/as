@@ -37,7 +37,7 @@ npm version 'major|minor|patch'
 
 # then commit this change to main, or you branch prior to a PR/merge, next
 
-git tag -a v1.0.0-proxy -m "proxy version 1.0.0"    # e.g. version 1.0.0
+git tag -a proxy/v1.0.0 -m "proxy version 1.0.0"    # e.g. version 1.0.0
 
 git push --tags
 ```

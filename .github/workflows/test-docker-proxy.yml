@@ -20,7 +20,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           flavor: latest=auto
-          tags: type=semver,pattern=proxy/v(\d.\d.\d)
+          tags: type=match,pattern=proxy/v(\d.\d.\d)
           images: ghcr.io/bgunson/as
           
       - 
