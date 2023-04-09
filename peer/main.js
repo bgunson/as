@@ -30,9 +30,7 @@ const router = routes(handlers);
 app.use(router);
 
 
-var opener = require("opener");
- 
-opener('http://localhost:3669');
+
 
 
 
@@ -41,3 +39,7 @@ opener('http://localhost:3669');
 const server = app.listen(port, () => { 
     log.info(chalk.bold.cyanBright(`Peer frontend & api is being served at: `) + chalk.bold.bgBlueBright(` http://localhost:${server.address().port} `));
 });
+
+var opener = require("opener");
+ 
+opener(` http://localhost:${server.address().port} `);
