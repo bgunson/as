@@ -1,5 +1,5 @@
 {
-  "name": "adshare-peer-server",
+  "name": "adshare",
   "version": "0.4.1",
   "description": "Peer server for serving/uploading ads to the proxy server. Join the swarm!",
   "main": "main.js",
@@ -11,7 +11,7 @@
     "start:dev": "nodemon main.js",
     "start:prod": "node main.js",
     "test": "env-cmd -e test --fallback --verbose cross-env npm run start:test",
-    "start": "env-cmd -e production --fallback cross-env npm run start:prod",
+    "start": "env-cmd --fallback cross-env npm run start:prod",
     "dev": "env-cmd -e development --fallback --verbose cross-env npm run start:dev"
   },
   "keywords": [],
