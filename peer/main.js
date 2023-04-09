@@ -30,6 +30,12 @@ const router = routes(handlers);
 app.use(router);
 
 
+var opener = require("opener");
+ 
+opener('http://localhost:3669');
+
+
+
 
 // Set up Peer server API --> GUI!
 const server = app.listen(port, () => { 

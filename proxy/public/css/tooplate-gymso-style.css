@@ -32,9 +32,10 @@ https://www.tooplate.com/view/2119-gymso-fitness
 
   :root {
     --primary-color:        #f13a11;
-    --white-color:          #ffffff;
+    --white-color:          #c0b3b3c6;
     --dark-color:           #171819;
-    --about-bg-color:       #f9f9f9;
+    --about-bg-color:       #d4abab7f;
+    --instSect-bg-color:    #b15b5b7f;
 
     --gray-color:           #909090;
     --link-color:           #404040;
@@ -224,26 +225,6 @@ https://www.tooplate.com/view/2119-gymso-fitness
 
 
   /*---------------------------------------
-     MODAL              
-  -----------------------------------------*/
-
-  .modal-content {
-    padding: 2rem 3rem;
-  }
-
-  .modal-header,
-  .modal-body,
-  .modal-footer {
-    border: 0;
-    padding: 0;
-  }
-
-  .membership-form a {
-    color: var(--primary-color);
-  }
-
-
-  /*---------------------------------------
     FEATURE          
   -----------------------------------------*/
 
@@ -359,7 +340,7 @@ https://www.tooplate.com/view/2119-gymso-fitness
   }
 
   /*---------------------------------------
-     HERO              
+    Adshare             
   -----------------------------------------*/
 
   .hero {
@@ -373,84 +354,27 @@ https://www.tooplate.com/view/2119-gymso-fitness
   }
 
 
-  /*---------------------------------------
-     CLASS               
-  -----------------------------------------*/
-
-  .class-info {
-    background: var(--white-color);
-    box-shadow: 6px 0 38px rgba(20,20,20,0.10);
-    border-radius: 0 0 2px 2px;
-    padding: 1rem 2rem;
-    position: relative;
-  }
-
-  .class-info img {
-    border-radius: 2px 2px 0 0;
-  }
-
-  .class-info strong {
-    color: var(--gray-color);
-  }
-
-  .class-price {
-    background: var(--primary-color);
-    border-radius: var(--border-radius-large);
-    color: var(--white-color);
-    font-weight: var(--font-weight-bold);
-    display: block;
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    width: 3.5rem;
-    height: 3.5rem;
-    line-height: 3.5rem;
-    text-align: center;
-  }
+  
 
 
  
   /*---------------------------------------
-      ABOUT & TEAM            
+      ABOUT           
   -----------------------------------------*/
 
   .about {
     background: var(--about-bg-color);
   }
 
-  .about-working-hours {
-    border-left: 2px solid;
-    padding-left: 3.5rem;
+   
+  /*---------------------------------------
+      INSTALLATION          
+  -----------------------------------------*/
+
+  .installationSection {
+    background: var(--instSect-bg-color);
   }
 
-  .about-working-hours strong {
-    color: var(--white-color);
-    opacity: 0.85;
-  }
-
-  .team-thumb {
-    position: relative;
-  }
-
-  .team-info {
-    background: var(--white-color);
-    border-radius: 0 0 2px 2px;
-    box-shadow: 6px 0 38px rgba(20,20,20,0.10);
-    padding: 10px;
-    position: relative;
-    align-self: center;
-  }
-
-  .team-info span {
-    font-weight: var(--font-weight-light);
-    opacity: 0.85;
-  }
-
-
-
-  .team-info .social-icon li {
-    display: block;
-  }
 
 
   /*---------------------------------------
@@ -467,22 +391,14 @@ https://www.tooplate.com/view/2119-gymso-fitness
       padding: 6px;
     }
 
-    .navbar .social-icon {
-      margin-top: 22px;
-    }
+ 
 
     .navbar-collapse,
     .site-footer {
       text-align: center;
     }
 
-    .schedule-table {
-      display: block;
-    }
-
-    .modal-content {
-      padding: 2rem;
-    }
+ 
   }
 
   @media screen and (max-width: 767px) {
