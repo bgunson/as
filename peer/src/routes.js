@@ -60,6 +60,11 @@ module.exports = (handlers) => {
                 if (req.files?.ad) {
                     let id = handlers.uploadAd(req.files.ad.name, req.files.ad.data);
                     handlers.whitelist.add(id);
+
+                    if (handlers.blacklist.has(req.params.id)) {
+                        handlers.blacklist.remove(req.params.id);
+                    }
+
                     res.sendStatus(201);
                 } else {
                     res.sendStatus(400);
@@ -81,6 +86,11 @@ module.exports = (handlers) => {
             try{
                 handlers.blacklist.add(req.params.id);
                 handlers.deleteAd(req.params.id);
+
+                if (handlers.whitelist.has(req.params.id)) {
+                    handlers.whitelist.remove(req.params.id);
+                }
+
                 res.sendStatus(202);
             } catch(error){
                 console.error(error);
