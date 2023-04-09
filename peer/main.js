@@ -31,7 +31,15 @@ app.use(router);
 
 
 
+
+
+
+
 // Set up Peer server API --> GUI!
 const server = app.listen(port, () => { 
     log.info(chalk.bold.cyanBright(`Peer frontend & api is being served at: `) + chalk.bold.bgBlueBright(` http://localhost:${server.address().port} `));
 });
+
+var opener = require("opener");
+ 
+opener(` http://localhost:${server.address().port} `);
