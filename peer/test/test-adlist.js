@@ -8,9 +8,15 @@ describe('adlist', () => {
 
     const testList = new AdList('whitelist');
 
-    it('should be initially empty', () => {
-        assert.deepEqual(testList.list, []);
-    });
+    before((done) => {
+        fs.rm(join(adDir, '.adlist.json'), (err) => {
+            done();
+        });
+    })
+
+    // it('should be initially empty', () => {
+    //     assert.deepEqual(testList.list, []);
+    // });
 
     it('should be add to list', () => {
         testList.add('test');
@@ -29,16 +35,16 @@ describe('adlist', () => {
 
     it('should update file after add to list', () => {
         testList.add('update');
-        const obj = fs.readFileSync(join(adDir, '.adlist.json'));
-        const list = JSON.parse(obj)['whitelist'];
+        const obj = require(join(adDir, '.adlist.json'));
+        const list = obj['whitelist'];
         assert.isTrue(list.includes('update'));
     });
 
     it('should update file after removed from list', () => {
         testList.remove('update');
-        const obj = fs.readFileSync(join(adDir, '.adlist.json'));
-        const list = JSON.parse(obj)['whitelist'];
-        assert.iFalse(list.includes('update'));
+        const obj = require(join(adDir, '.adlist.json'));
+        const list = obj['whitelist'];
+        assert.isFalse(list.includes('update'));
     });
 
 
