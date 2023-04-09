@@ -9,20 +9,15 @@ require('dotenv').config();
 const registerHandlers = require('./handlers');
 const { writeLog, getRangeFromLog, logicalTime } = require('./activity-logger');
 const { adDir } = require("./defaults");
+
 // Read from env var file
-const serverURL = process.env.SERVER_URL; 
-const backup_serverURL1 = process.env.SERVER_URL_BACKUP_1;
-const backup_serverURL2 = process.env.SERVER_URL_BACKUP_2;      
+const serverURL = process.env.SERVER_URL || `https://amazing-limiter-378022.uw.r.appspot.com`; 
+const backup_serverURL1 = process.env.SERVER_URL_BACKUP_1 || `http://aspxy3.bhodrolok.xyz/`;
+const backup_serverURL2 = process.env.SERVER_URL_BACKUP_2 || `http://aspxy5.bhodrolok.xyz/`;      
 
-// Max time to wait for connection to be established with proxy server; default 7 seconds
-const SERVER_TIMEOUT_MS = process.env.TIMEOUT || 7000;
-const SERVER_TIMEOUT = SERVER_TIMEOUT_MS/1000; 
-
-// Between each retry attempt connecting to same server; default 5 seconds
-const RETRY_INTERVAL_MS = process.env.RETRY_INTERVAL_MS || 5000;
-const RETRY_TIMEOUT = RETRY_INTERVAL_MS/1000;
-// Number of tries to retry attempt connection to a server; default 3 tries
-const NUM_RETRIES = process.env.NUM_RETRIES || 3;
+const SERVER_TIMEOUT_MS = process.env.CONN_TIMEOUT || 6000;
+const RETRY_INTERVAL_MS = process.env.RETRY_INTERVAL_MS || 1234;
+const NUM_RETRIES = process.env.NUM_RETRIES || 2;
 
 class ProxyReplica {
 
@@ -51,10 +46,10 @@ module.exports = () => {
 
     const socket = io(proxyReplica.next(), {
         transports: ['websocket'],              //https://stackoverflow.com/a/69450518; WebSocket over HTTP long polling
-        autoConnect: false,                     // connect is called at bottom
-        reconnectionAttempts: NUM_RETRIES,      // num attempts to connect to a given replica (NUM_RETRIES)
-        reconnectionDelay: RETRY_INTERVAL_MS,   // delay between each reconnect attempt
-        timeout: SERVER_TIMEOUT_MS,             // For each connection attempt
+        autoConnect: false,                     
+        reconnectionAttempts: NUM_RETRIES,      
+        reconnectionDelay: RETRY_INTERVAL_MS,   
+        timeout: SERVER_TIMEOUT_MS,             
         // see other options here: https://socket.io/docs/v4/client-options/
     });
 
@@ -69,10 +64,10 @@ module.exports = () => {
     });
 
     socket.io.on("reconnect_failed", () => {
-        console.log("max reconnects");
+        log.info(`Max reconnects reached for: ${socket.io.uri} !`);
         socket.close();
         socket.io.uri = proxyReplica.next();      // advance to next backup
-        console.log(`Swapping server urls to ${socket.io.uri}`)
+        log.info(`Swapping server urls to: ${socket.io.uri}`)
         socket.connect();
     });
 
@@ -117,23 +112,7 @@ module.exports = () => {
     socket.on('activity-log-msg', (messages) => {
         writeLog(messages.join());
     });
-
-    // socket.on('ad-replicate', 
-    /**
-     * @deprecated since adding passive https://github.com/bgunson/as/pull/35
-     */
-    //(name, ad) => {
- 
-    //     validAd = [];
-    //     handlers.checkNumOfValidAd(validAd);
-    //     if(validAd.length > 0){
-    //         name = validAds[Math.floor(Math.random() * validAds.length)];
-    //         var adPath = path.join(adDir, name);
-    //         //sends back to proxy
-    //         handlers.giveAd(adPath);
-    //     }
-    // });
-
+    
     socket.connect();
 
     return handlers;
