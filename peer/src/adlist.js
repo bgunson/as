@@ -57,7 +57,7 @@ class AdList {
 
         adList[this.name] = this.list;
 
-        fs.writeFileSync(fPath, JSON.stringify(adList));
+        fs.writeFileSync(fPath, JSON.stringify(adList, null, 2));
     }
 
     /**
