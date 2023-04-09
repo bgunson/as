@@ -31,19 +31,30 @@ module.exports = (io, socket, peers) => {
      */
     const giveAd = (id, ad) => {
         peers.emit("give-ad", socket, id, ad);
-        // when an ad is incoming to the proxy ask all others if they need it to be replicated
-        peers.exclude(socket.id).forEach((peer) => {
-            peer.emit('want-ad', id, (ans) => {
-                if (ans === true) {
-                    log.info(chalk.bold(`Peer: ${peer.id} needs ad: '${id}'`));
-                    peer.emit('replicate', id, ad);
-                }
-            });
+        // when an ad is incoming to the proxy ask another if they need it to be replicated
+        const randPeer = peers.choosePeer();
+        randPeer.emit('want-ad', id, (ans) => {
+            if (ans === true) {
+                log.info(chalk.bold(`Peer: ${randPeer.id} needs ad: '${id}'`));
+                randPeer.emit('replicate', id, ad);
+            }
         });
     }
 
     const deleteAd = (id) =>{
-        socket.broadcast.emit('delete-ad', id);
+        // If we want ads to be deleted by all peers:
+        // socket.broadcast.emit('delete-ad', id);
+
+        /**
+         * If we want deletion to be ingerently weak:
+         * 
+         * choose an arbitrary peer:
+         * 
+         * - if the peer is the same one who just initiated the deletion, then the propogation will terminate and they will be the only ones who actuall rm the file
+         * - if the peer is a different peer, then they will perform the delete and emit back here where this routine will restart
+         */
+        peers.choosePeer().emit('delete-ad', id);
+
     }
 
     /**

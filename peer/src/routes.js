@@ -58,7 +58,13 @@ module.exports = (handlers) => {
         (req, res) => {
             try{
                 if (req.files?.ad) {
-                    handlers.uploadAd(req.files.ad.name, req.files.ad.data);
+                    let id = handlers.uploadAd(req.files.ad.name, req.files.ad.data);
+                    handlers.whitelist.add(id);
+
+                    if (handlers.blacklist.has(req.params.id)) {
+                        handlers.blacklist.remove(req.params.id);
+                    }
+
                     res.sendStatus(201);
                 } else {
                     res.sendStatus(400);
@@ -78,9 +84,14 @@ module.exports = (handlers) => {
     router.delete('/ad/:id',
         (req, res) => {
             try{
+                handlers.blacklist.add(req.params.id);
                 handlers.deleteAd(req.params.id);
+
+                if (handlers.whitelist.has(req.params.id)) {
+                    handlers.whitelist.remove(req.params.id);
+                }
+
                 res.sendStatus(202);
-                //ToDo
             } catch(error){
                 console.error(error);
                 res.status(501).send(`Error deleting ad file!`);

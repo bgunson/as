@@ -5,6 +5,7 @@ const { Socket } = require('socket.io-client');
 const chalk = require('chalk');
 var log = require('fancy-log');
 const { adDir } = require('./defaults');
+const AdList = require('./adlist');
 
 
 /**
@@ -12,6 +13,9 @@ const { adDir } = require('./defaults');
  * @returns api functions
  */
 module.exports = (peer) => {
+
+    const whitelist = new AdList('whitelist');
+    const blacklist = new AdList('blacklist');
 
     let peers;
 
@@ -73,11 +77,6 @@ module.exports = (peer) => {
      * @returns - the name of the new ad (base64 digest of the hashed file using sha256)
      */
     const uploadAd = (name, ad) => {
-
-        //If ad containing directory, name defined earlier, does not exist in system, create it.
-        if (!fs.existsSync(adDir)) {
-            fs.mkdirSync(adDir, { recursive: true });
-        };
 
         // Hash the incoming file (buffer) and use its base64 digest as the name when writing to disk
         const hashSum = crypto.createHash('sha256');
@@ -161,7 +160,9 @@ module.exports = (peer) => {
         uploadAd,
         deleteAd,
         checkNumOfValidAd,
-        returnAdList
+        returnAdList,
+        whitelist, 
+        blacklist
     }
 
 }

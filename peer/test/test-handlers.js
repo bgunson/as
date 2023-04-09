@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { io } = require('socket.io-client');
-const { adDir } = require("../src/defaults");
+const { adDir, validTypes } = require("../src/defaults");
 
 describe('handlers', () => {
 
@@ -28,7 +28,7 @@ describe('handlers', () => {
     it('#checkNumOfValidAd should work', () => {
         let valid = [];
         handlers.checkNumOfValidAd(valid);
-        assert.equal(valid.length, fs.readdirSync(adDir).length);
+        assert.equal(valid.length, fs.readdirSync(adDir).filter(f => validTypes.includes(path.extname(f))).length);
     });
 
     it('getAd_SingleFakeAd_validAdPath', () => {
