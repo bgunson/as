@@ -87,7 +87,12 @@ module.exports = () => {
     socket.on('replicate', handlers.uploadAd);
 
     // Peer received `delete-ad` event from proxy server
-    socket.on('delete-ad', handlers.deleteAd);
+    socket.on('delete-ad', (id) => {
+        // only delete if was not a user ad
+        if (!handlers.whitelist.has(id)) {
+            handlers.deleteAd(id);
+        }
+    });
 
     // Peer received `get-ad` event from proxy server; pick random local ad and send it to proxy server
     socket.on('get-ad', (name) => {
@@ -101,7 +106,7 @@ module.exports = () => {
 
     socket.on('want-ad', (id, cb) => {
         // do we need this ad?
-        cb(!fs.existsSync(path.join(adDir, id)));
+        cb(!fs.existsSync(path.join(adDir, id)) && !handlers.blacklist.has(id));
     });
 
     socket.on('get-latest-log-time', async (respond) => {
