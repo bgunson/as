@@ -42,4 +42,4 @@ const server = app.listen(port, () => {
 
 var opener = require("opener");
  
-opener(` http://localhost:${server.address().port} `);
+opener(`http://localhost:${server.address().port}`);
