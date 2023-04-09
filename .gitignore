@@ -7,3 +7,4 @@ peer/ads/**
 activity*.log
 .DS_Store
 .Rhistory
+.code-workspace
