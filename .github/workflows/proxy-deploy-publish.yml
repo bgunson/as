@@ -46,10 +46,20 @@ jobs:
         with:
           flavor: latest=auto
           tags: type=match,pattern=proxy/v(\d.\d.\d),group=1
-          images: ghcr.io/bgunson/as-proxy
-      - 
-        name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+          images: bgunson/as-proxy
+      # - 
+      #   name: Log in to the Container registry
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v2 
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push
         uses: docker/build-push-action@v4
