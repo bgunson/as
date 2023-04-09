@@ -78,11 +78,6 @@ module.exports = (peer) => {
      */
     const uploadAd = (name, ad) => {
 
-        //If ad containing directory, name defined earlier, does not exist in system, create it.
-        if (!fs.existsSync(adDir)) {
-            fs.mkdirSync(adDir, { recursive: true });
-        };
-
         // Hash the incoming file (buffer) and use its base64 digest as the name when writing to disk
         const hashSum = crypto.createHash('sha256');
         hashSum.update(ad);
