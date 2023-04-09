@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - 'v**-proxy'
+      - 'proxy/v**'
 
 
 jobs:
@@ -19,6 +19,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
+          flavor: latest=auto
+          tags: type=semver,pattern=proxy/v(\d.\d.\d)
           images: ghcr.io/bgunson/as
           
       - 
