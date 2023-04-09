@@ -1,5 +1,5 @@
-name: Deploy to GAE + Build, Tag and Publish Docker Image to Docker Hub
-
+name: Build, Tag and Publish Peer Docker Image to Docker Hub
+run-name: ${{ github.actor }} is testing out GitHub Actions 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
