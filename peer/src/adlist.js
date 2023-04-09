@@ -40,7 +40,17 @@ class AdList {
      * Update the file to reflect changes to list stored in memory
      */
     #update() {
-        throw new Error("Not yet implemented");
+        const fPath = join(adDir, '.adlist.json');
+
+        //check from blacklist
+        this.list.filter(id => id.startsWith('black')).forEach((id) => {
+            //check if file exist in system
+            if (fs.existsSync(join(adDir, id))) {
+                fs.unlink(join(adDir, id), (err) => {
+                    if (err) throw err;
+                });
+            }
+        });
     }
 
     /**
@@ -48,7 +58,8 @@ class AdList {
      * @param {string} id - hash id name of file 
      */
     add(id) {
-        throw new Error("Not yet implemented");
+        this.list.push(id);
+        //console.log(this.list);
         this.#update();
     }
 
@@ -57,8 +68,13 @@ class AdList {
      * @param {string} id - hash id name of file
      */
     remove(id) {
-        throw new Error("Not yet implemented");
-        this.#update();
+        const index = this.list.indexOf(id);
+        // Check if name of file is in list, -1 if it isnt
+        if (index !== -1) {
+            this.list.splice(index, 1);
+            this.#update(); 
+        }
+
     }
 
     /**
