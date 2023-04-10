@@ -31,6 +31,8 @@
     "express-fileupload": "^1.4.0",
     "fancy-log": "^2.0.0",
     "if-env": "latest",
+    "open": "^9.1.0",
+    "opener": "^1.5.2",
     "read-last-lines": "^1.8.0",
     "readline-sync": "^1.4.10",
     "socket.io": "latest",
