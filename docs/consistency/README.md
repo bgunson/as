@@ -2,7 +2,9 @@
 
 ### Gossip Animations
 ![as-gossip-deletions](https://user-images.githubusercontent.com/47361247/230993933-d469ee93-c31b-4724-8070-c9cece7bf957.gif)
-![as-gossip-uploads](https://user-images.githubusercontent.com/47361247/230993970-25497087-63e7-4e78-a21c-66a630bba3fa.gif)
+
+![as-gossip-uploads](https://user-images.githubusercontent.com/47361247/230996387-230f9b61-bdde-4c09-a9cc-de3bb859e1a7.gif)
+
 ### Deletion Flowchart
 ![deletion-flow_1](https://user-images.githubusercontent.com/47361247/230994060-c8a496f7-0518-44af-b369-e36ea670ef8c.png)
 ### Upload (w/ EC) Flowchart
