@@ -1,4 +1,5 @@
 name: Proxy deploy and publish
+run-name: ${{ github.actor }} is checking if Proxy is being deployed + published to GHCR! 
 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch

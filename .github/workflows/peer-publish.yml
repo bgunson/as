@@ -1,27 +1,20 @@
 name: Build, Tag and Publish Peer Docker Image to Docker Hub
-run-name: ${{ github.actor }} is testing out GitHub Actions 
+run-name: ${{ github.actor }} is checking if Peer is being built + published to GHCR! 
+
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     tags:
         - 'peer/v**'
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-env:
-  # REGISTRY: docker.io
-  # Might need to change this one
-  IMAGE_NAME: ${{ github.repository }}
-  DOCKERHUB_REPO: registry.com/reponame/peer
-  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
 
 jobs:
 
   build-push-to-registry:
     runs-on: ubuntu-latest
-    name: Publish to GHCR
+    name: Publish image to GHCR
 
     steps:
 
