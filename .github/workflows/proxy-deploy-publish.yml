@@ -1,41 +1,28 @@
-name: Deploy Proxy to GAE + Build, Tag and Publish Docker Image to Docker Hub
-run-name: ${{ github.actor }} is testing out GitHub Actions 
+name: Proxy deploy and publish
+run-name: ${{ github.actor }} is checking if Proxy is being deployed + published to GHCR! 
+
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     tags:
-        - 'v**-proxy'
-#     branches:
-#       - 'main'
-#     paths:
-#       - 'proxy/**'
+        - 'proxy/v**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-env:
-  # REGISTRY: docker.io
-  # Might need to change this one
-  IMAGE_NAME: ${{ github.repository }}
-  DOCKERHUB_REPO: registry.com/reponame/peer
-  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-
 jobs:
-
-  deploy-gae:
+  deploy:
     name: Deploying to Google Cloud
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v2
       
     - id: 'auth'
       uses: 'google-github-actions/auth@v1'
       with:
-        credentials_json: ${{ env.GCP_SA_KEY }}
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
 
     - id: 'deploy'
       uses: 'google-github-actions/deploy-appengine@v1'
@@ -45,23 +32,41 @@ jobs:
     - name: Test
       run: curl "${{ steps.deploy.outputs.url }}"
 
-  build-push-to-registry:
+  publish:
+    name: Publish to GHCR
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code so workflow can access
+      -
+        name: Checkout
         uses: actions/checkout@v3
-
-      - name: Login to Docker Hub registry
-        uses: docker/login-action@v2
+      - 
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
         with:
-          username: ${{ env.DOCKERHUB_USERNAME }}
-          password: ${{ env.DOCKERHUB_TOKEN }}
-
-      - name: Build & Tag Docker image with latest git commit
-        run: docker-compose build \
-              --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) \
-              --no-cache
-            docker tag "${{ env.IMAGE_NAME }}":latest "${DOCKERHUB_REPO}:${{ github.sha }}"
-
-      - name: Push Docker image to registry
-        run: docker push "${DOCKERHUB_REPO}:${{ github.sha }}"
+          flavor: latest=auto
+          tags: type=match,pattern=proxy/v(\d.\d.\d),group=1
+          images: bgunson/as-proxy
+      # - 
+      #   name: Log in to the Container registry
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v2 
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./proxy
+          file: ./proxy/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

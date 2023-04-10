@@ -10,9 +10,9 @@
     "posttest": "echo \" \t---Test run completed...---\"",
     "start:dev": "nodemon main.js",
     "start:prod": "node main.js",
-    "test": "env-cmd -e test --fallback --verbose cross-env npm run start:test",
-    "start": "env-cmd --fallback cross-env npm run start:prod",
-    "dev": "env-cmd -e development --fallback --verbose cross-env npm run start:dev"
+    "test": "cross-env npm run start:test",
+    "start": "cross-env npm run start:prod",
+    "dev": "cross-env npm run start:dev"
   },
   "keywords": [],
   "author": "Bennett Gunson",

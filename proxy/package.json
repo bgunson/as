@@ -1,6 +1,6 @@
 {
   "name": "adshare-proxy",
-  "version": "0.4.3",
+  "version": "0.4.5",
   "description": "Proxy server.",
   "main": "main.js",
   "scripts": {
@@ -9,9 +9,9 @@
     "posttest": "echo \" \t---Test run completed...---\"",
     "start:dev": "nodemon main.js",
     "start:prod": "node main.js",
-    "test": "env-cmd -e test --fallback --verbose cross-env npm run start:test",
-    "start": "env-cmd -e production --fallback cross-env npm run start:prod",
-    "dev": "env-cmd -e development --fallback cross-env npm run start:dev"
+    "test": "cross-env npm run start:test",
+    "start": "cross-env npm run start:prod",
+    "dev": "cross-env npm run start:dev"
   },
   "keywords": [],
   "author": "Bennett Gunson",
