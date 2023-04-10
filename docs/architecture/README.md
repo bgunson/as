@@ -1,0 +1,1 @@
+# Adshare Architecture
