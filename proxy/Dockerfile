@@ -6,8 +6,11 @@ COPY package*.json ./
 
 RUN npm install --omit=dev
 
-ENV NODE_ENV=${NODE_ENV}
-
 COPY . .
+
+ENV NODE_ENV=${NODE_ENV} \
+    PROXY_PORT=${PROXY_PORT}
+
+EXPOSE $PROXY_PORT
 
 CMD ["node", "main.js"]
