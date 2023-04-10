@@ -13,6 +13,7 @@ class Home extends Component {
     this.refreshAdList();
   }
 
+  //gets a list of all the ads so it can display them on the site
   refreshAdList = () => {
     fetch("/ads")
       .then((response) => response.json())
@@ -21,13 +22,14 @@ class Home extends Component {
   };
 
 
-
+//viewAd is used to open in a new tab the ad but in full resolution and size
   viewAd = (item) => {
     window.open('ad/'.concat(item), '_blank', 'noreferrer');
 
 
   };
 
+  //sends out a message suggesting this ad be deleted to the proxy
   deleteAd = (item) => {
     fetch(`/ad/${item}`, {
       method: "DELETE",
@@ -36,9 +38,8 @@ class Home extends Component {
 
   }
 
+  //function for uploading an image to your own peer client
   uploadAd = (item) => {
-    
-
     item.preventDefault();
     let input = document.querySelector('#ad_picker')
     const formData = new FormData();
@@ -58,14 +59,10 @@ class Home extends Component {
     })
 
     window.location.reload();
-
   };
 
 
   renderItems = () => {
-
-
-
     return this.state.adList.map((item) => (
       <li
         key={item.id}
