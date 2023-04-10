@@ -1,7 +1,7 @@
 # Adshare Consistency
 
 ### Gossip Animations
-![as-gossip-deletions](https://user-images.githubusercontent.com/47361247/230996601-3170d483-8d17-41c7-9034-441e18670d20.gif)
+![as-gossip-deletions](https://user-images.githubusercontent.com/47361247/230997888-b0feddee-24be-4d6e-8a61-bb5bddd47930.gif)
 
 ![as-gossip-uploads](https://user-images.githubusercontent.com/47361247/230996387-230f9b61-bdde-4c09-a9cc-de3bb859e1a7.gif)
 
