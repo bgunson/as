@@ -38,7 +38,7 @@
         <li><a href="#boring-way">Node & npm</a></li>
       </ul>
     </li>
-    <li><a href="#some-info">How does it work</a>
+    <li><a href="#some-info">How does it work </a>
     <li><a href="#features">Distributed System Features</a>
     <li><a href="#too-much-time">Configuration</a></li>
     <!--FUTURE!
