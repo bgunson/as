@@ -34,7 +34,7 @@ services:
       - "${PEER_PORT:-3000}:${PEER_PORT:-3000}"
 
     # Format: registry/repository:tag (change!)
-    image: your-registry.com/your-repo/peer:${GIT_COMMIT}
+    image: bgunson/as-peer
 
     volumes:
       - ./ads:/app/ads
