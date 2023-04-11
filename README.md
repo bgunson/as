@@ -71,10 +71,10 @@ Our platform is a solution for the challenges posed by the current centralized a
 * <h3 id="docker-way"> Docker :whale: </h3>
 
     1. Using pre-built images :camera: (recommended)
-        - Container images for both the Proxy and Peer are avaialble on GHCR which can be pulled and used directly.    
+        - Container images for both the Proxy and Peer are available on GHCR which can be pulled and used directly.    
         - <b>Peer</b>:
             - Create a new local directory for storing ads.
-            - Run `docker run -v -v /path/to/local/ads:peer/ads -p 3000:3000/tcp bgunson/as-peer`       
+            - Run `docker run -v /path/to/local/ads:peer/ads -p 3000:3000/tcp bgunson/as-peer`       
             - Terminate at any time by pressing Ctrl+C. 
             - NB: If you want to run multiple Peers simultaneously, make sure you run the commands on separate directories and change the ports.
 
