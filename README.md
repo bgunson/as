@@ -4,15 +4,14 @@
     <b> AdShare</b>
 </h1>
 
-[![Tests](https://github.com/bgunson/as/actions/workflows/tests.yml/badge.svg)](https://github.com/bgunson/as/actions/workflows/tests.yml)
-
-[![Build, Tag and Publish Peer Docker Image to Docker Hub](https://github.com/bgunson/as/actions/workflows/peer-publish.yml/badge.svg)](https://github.com/bgunson/as/actions/workflows/peer-publish.yml)
-
-
-
 <h3 align="center"> CPSC 559 - Introduction to Distributed Systems </h3>
 <h4 align="center"> <i>Final Project</i> - <a href="https://www.ucalgary.ca/">University of Calgary</a> (Winter 2023) </h4>
 
+[![Tests](https://github.com/bgunson/as/actions/workflows/tests.yml/badge.svg)](https://github.com/bgunson/as/actions/workflows/tests.yml)
+
+[![Peer Workflow](https://github.com/bgunson/as/actions/workflows/peer-publish.yml/badge.svg)](https://github.com/bgunson/as/actions/workflows/peer-publish.yml)
+
+[![Proxy Workflow](https://github.com/bgunson/as/actions/workflows/proxy-deploy-publish.yml/badge.svg)](https://github.com/bgunson/as/actions/workflows/proxy-deploy-publish.yml)
 
 
 <h3> Built using </h3>
