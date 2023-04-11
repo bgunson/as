@@ -73,11 +73,3 @@ ___
 
 
 ___
-## Communication Sequence Diagram
-
-![](./seq1.png)
-
-___
-## System Architecture
-
-![](./arch.png)
