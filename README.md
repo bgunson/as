@@ -39,15 +39,15 @@
         <li><a href="#boring-way">Node & npm</a></li>
       </ul>
     </li>
-    <li><a href="some-info">How does it work</a>
-    <li><a href="features">Distributed System Features</a>
+    <li><a href="#some-info">How does it work</a>
+    <li><a href="#features">Distributed System Features</a>
     <li><a href="#too-much-time">Configuration</a></li>
     <!--FUTURE!
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     -->
-    <li><a href="extra">Feedback</a></li>
+    <li><a href="#extra">Feedback</a></li>
     <li><a href="#acknowledgments">Contributors</a></li>
   </ol>
 </details>
@@ -211,7 +211,7 @@ You can read more about the environment variables [here](./docs/README.md#enviro
 We would love some constructive feedback. This was a great learning experience for us all and we would love to see how we could improve the project. <br><br>
 <p align="right">(<a href="#readme-top">back to top :arrow_up: </a>)</p>
 
-<h2 id="contributors">Contributors :scroll: </h2>
+<h2 id="acknowledgments">Contributors :scroll: </h2>
 
 * Bennett Gunson
 * Kirill Larshin
