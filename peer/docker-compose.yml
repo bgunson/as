@@ -1,7 +1,5 @@
 version: "3.9"
 
-name: adshare
-
 services:
   peer:
     build:
