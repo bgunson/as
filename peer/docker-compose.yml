@@ -19,15 +19,15 @@ services:
     #  - ./peer/.env
     
     environment:
-      # Feed into Dockerfile's ENV values
+      # Feed into Dockerfile's ENV values; format: ${VARNAME:-default}
       NODE_ENV: production
       PEER_PORT: ${PEER_PORT:-3000}
-      SERVER_URL: https://amazing-limiter-378022.uw.r.appspot.com
-      SERVER_URL_BACKUP_1: http://aspxy3.bhodrolok.xyz/
-      SERVER_URL_BACKUP_2: http://aspxy4.bhodrolok.xyz/
-      CONN_TIMEOUT: 6000
-      NUM_RETRIES: 2
-      RETRY_INTERVAL_MS: 1234
+      SERVER_URL: ${SERVER_URL:-https://amazing-limiter-378022.uw.r.appspot.com}
+      SERVER_URL_BACKUP_1: ${SERVER_URL_BACKUP_1:-http://aspxy3.bhodrolok.xyz/}
+      SERVER_URL_BACKUP_2: ${SERVER_URL_BACKUP_2:-http://aspxy4.bhodrolok.xyz/}
+      CONN_TIMEOUT: ${CONN_TIMEOUT:-6000}
+      NUM_RETRIES: ${NUM_RETRIED:-2}
+      RETRY_INTERVAL_MS: ${RETRY_INTERVAL_MS:-1234}
 
     ports:
     # Map host port --> API port
@@ -37,4 +37,4 @@ services:
     image: your-registry.com/your-repo/peer:${GIT_COMMIT}
 
     volumes:
-      - ./peer:/app
+      - ./ads:/app/ads
