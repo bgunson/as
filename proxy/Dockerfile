@@ -9,8 +9,8 @@ RUN npm install --omit=dev
 COPY . .
 
 ENV NODE_ENV=${NODE_ENV} \
-    PROXY_PORT=${PROXY_PORT}
+    PORT=${PORT}
 
-EXPOSE $PROXY_PORT
+EXPOSE $PORT
 
 CMD ["node", "main.js"]
