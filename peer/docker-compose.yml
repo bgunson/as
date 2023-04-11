@@ -4,7 +4,6 @@ name: adshare
 
 services:
   peer:
-    container_name: adshare-peer-container
     build:
       context: ./peer
       dockerfile: Dockerfile
