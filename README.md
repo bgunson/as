@@ -11,7 +11,7 @@
 
 [![Peer Workflow](https://github.com/bgunson/as/actions/workflows/peer-publish.yml/badge.svg)](https://github.com/bgunson/as/actions/workflows/peer-publish.yml)
 
-[![Proxy Workflow](https://github.com/bgunson/as/actions/workflows/proxy-deploy-publish.yml/badge.svg)](https://github.com/bgunson/as/actions/workflows/proxy-deploy-publish.yml)
+[![Proxy deploy and publish](https://github.com/bgunson/as/actions/workflows/proxy-deploy-publish.yml/badge.svg)](https://github.com/bgunson/as/actions/workflows/proxy-deploy-publish.yml)
 
 
 <h3> Built using </h3>
