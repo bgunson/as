@@ -1,0 +1,40 @@
+version: "3.9"
+
+name: adshare
+
+services:
+  peer:
+    container_name: adshare-peer-container
+    build:
+      context: ./peer
+      dockerfile: Dockerfile
+      target: prod
+      #args:
+        # https://stackoverflow.com/a/68912119/21074625; tag built image with latest git commit hash
+        # https://stackoverflow.com/questions/51770930/git-commit-hash-in-dockerfile-as-label#comment112822378_51834390
+      #  GIT_COMMIT: $(git rev-parse --short HEAD)
+    
+    #env_file:
+    #  # Bit of a pain to get this going... https://stackoverflow.com/a/67820875/21074625
+    #  - ./peer/.env
+    
+    environment:
+      # Feed into Dockerfile's ENV values
+      NODE_ENV: production
+      PEER_PORT: ${PEER_PORT:-3000}
+      SERVER_URL: https://amazing-limiter-378022.uw.r.appspot.com
+      SERVER_URL_BACKUP_1: http://aspxy3.bhodrolok.xyz/
+      SERVER_URL_BACKUP_2: http://aspxy4.bhodrolok.xyz/
+      CONN_TIMEOUT: 6000
+      NUM_RETRIES: 2
+      RETRY_INTERVAL_MS: 1234
+
+    ports:
+    # Map host port --> API port
+      - "${PEER_PORT:-3000}:${PEER_PORT:-3000}"
+
+    # Format: registry/repository:tag (change!)
+    image: your-registry.com/your-repo/peer:${GIT_COMMIT}
+
+    volumes:
+      - ./peer:/app

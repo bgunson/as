@@ -1,48 +1,57 @@
 name: tests
-
+run-name: ${{ github.actor }} is testing out GitHub Actions to test if the services are working correctly!
 on:
   push
 
 env:
+  # Setup envvars for running tests
   NODE_ENV: test
+  TEST_NAME: "Default .rc File Path Test"
+  ENVVAR: exists
+  ENV_PATH: ./.env-cmdrc
+  PEER_PORT: 69696
+  SERVER_URL: http://localhost:3000
+  SERVER_URL_BACKUP_1: http://localhost:5000
+  SERVER_URL_BACKUP_2: http://aspxy3.bhodrolok.xyz
+  CONN_TIMEOUT: 5000
+  NUM_RETRIES: 1
+  RETRY_INTERVAL_MS: 1234
   
 jobs: 
   test-peer:
     runs-on: ubuntu-latest
     steps:
-      - 
-        name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
-      - 
-        name: Use Node.js
+      
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-      - 
-        name: Install peer dependencies 
+      
+      - name: Install peer dependencies 
         run: npm install
         working-directory: ./peer
-      -
-        name: Test Peer
+      
+      - name: Test Peer
         run: npm test
         working-directory: ./peer
 
   test-proxy:
     runs-on: ubuntu-latest
     steps:
-    -
-      name: Checkout
+    - name: Checkout
       uses: actions/checkout@v2
-    - 
-      name: Use Node.js
+    
+    - name: Use Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '16.x'
-    -
-      name: Install proxy dependencies
+    
+    - name: Install proxy dependencies
       run: npm install
       working-directory: ./proxy
-    - 
-      name: Test proxy
+    
+    - name: Test proxy
       run: npm test
       working-directory: ./proxy

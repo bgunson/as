@@ -21,7 +21,7 @@ const registerHandlers = require('./src/handlers');
 // for lamport time sync - see src/activity-logger
 const { syncronize } = require('./src/activity-logger');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 50000;
 
 app.enable("trust proxy");
 

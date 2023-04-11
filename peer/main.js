@@ -9,7 +9,8 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const port = process.env.PEER_PORT; // use env defined port or randomly assigned when listenining if undefined so multiple peers can be spawned from same machine
+// use env defined port or randomly assigned when listenining if undefined so multiple peers can be spawned from same machine
+const port = process.env.PEER_PORT || 3000; 
 const chalk = require('chalk');
 var log = require('fancy-log');
 const cors = require('cors');
@@ -23,17 +24,11 @@ const handlers = connectPeer();
 app.use(fileUpload());
 app.use(express.static('frontend/build'));     // gui build output folder
 
-// local api
+// local API
 app.use(cors());
 const routes = require('./src/routes');
 const router = routes(handlers);
 app.use(router);
-
-
-
-
-
-
 
 // Set up Peer server API --> GUI!
 const server = app.listen(port, () => { 
