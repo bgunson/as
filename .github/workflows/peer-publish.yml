@@ -24,6 +24,8 @@ jobs:
         working-directory: ./peer/frontend
 
       - name: Build Peer frontend
+        env:
+          CI: ""
         run: npm run build
         working-directory: ./peer/frontend
 
