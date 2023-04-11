@@ -119,7 +119,7 @@ Our platform is a solution for the challenges posed by the current centralized a
 
     You should then see an iframed ad which was given by the to the client from the peer server(s) via the proxy.
     
-    To learn more about changing the port to something else and for configuring stuff, read <a href="too-much-time"> this </a> section.
+    To learn more about changing the port to something else and for configuring stuff, read <a href="#too-much-time"> this </a> section.
 <p align="right">(<a href="#readme-top">back to top :arrow_up: </a>)</p>
 
 <h2 id="some-info"> How does it work :question: </h2>
